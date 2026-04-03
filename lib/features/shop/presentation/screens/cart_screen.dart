@@ -190,27 +190,38 @@ class CartScreen extends ConsumerWidget {
                         const SizedBox(height: 24),
                         Row(
                           children: [
-                            const Text('Thanh toán:',
-                                style: TextStyle(color: Colors.white38),),
+                            const Text(
+                              'Thanh toán:',
+                              style: TextStyle(color: Colors.white38),
+                            ),
                             const Spacer(),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6,),
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.blue.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                    color: Colors.blue.withValues(alpha: 0.3),),
+                                  color: Colors.blue.withValues(alpha: 0.3),
+                                ),
                               ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.wallet,
-                                      size: 16, color: Colors.blue,),
+                                  Icon(
+                                    Icons.wallet,
+                                    size: 16,
+                                    color: Colors.blue,
+                                  ),
                                   SizedBox(width: 6),
-                                  Text('PicklePay',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,),),
+                                  Text(
+                                    'PicklePay',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
