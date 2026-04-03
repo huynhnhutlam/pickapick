@@ -1,0 +1,33 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+
+
+linter:
+  rules:
+    avoid_print: true
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    curly_braces_in_flow_control_structures: true
+    require_trailing_commas: true
+    use_key_in_widget_constructors: true
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    unnecessary_this: true
+    directives_ordering: true
+    lines_longer_than_80_chars: false
+    # or you can use lines_longer_than_120_chars if you prefer
+
+
+    public_member_api_docs: false # Re-enable if generating public docs
+    sort_unnamed_constructors_first: true
+    annotate_overrides: true
+    cancel_subscriptions: true
+    # Avoid abbreviations
+    # Use PascalCase for classes
+    # Use camelCase for members/variables/functions/enums
+    # Use snake_case for files
