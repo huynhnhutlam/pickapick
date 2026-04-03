@@ -32,7 +32,6 @@ migrate_working_dir/
 .pub-cache/
 .pub-preload-cache/
 .pub/
-pubspec.lock
 build/
 coverage/
 **/generated_plugin_registrant.dart
