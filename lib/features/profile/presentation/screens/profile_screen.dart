@@ -173,7 +173,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLogoutButton(String title, {Function? onPressed}) {
+  Widget _buildLogoutButton(String title, {VoidCallback? onPressed}) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
@@ -185,7 +185,7 @@ class ProfileScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        onPressed: () => onPressed?.call(),
+        onPressed: onPressed,
         child: Text(title),
       ),
     );
