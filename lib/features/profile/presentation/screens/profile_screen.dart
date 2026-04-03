@@ -144,32 +144,54 @@ class ProfileScreen extends ConsumerWidget {
                     subtitle: 'Liên hệ với chúng tôi',
                   ),
                   const SizedBox(height: 48),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.redAccent,
-                        side: const BorderSide(color: Colors.redAccent),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  // Logout button
+                  (ref.watch(authNotifierProvider).value != null)
+                      ? _buildLogoutButton(
+                          'Đăng xuất',
+                          onPressed: () async {
+                            await ref
+                                .read(authNotifierProvider.notifier)
+                                .signOut();
+                          },
+                        )
+                      : _buildLogoutButton(
+                          'Đăng nhập',
+                          color: Theme.of(context).colorScheme.primary,
+                          onPressed: () {
+                            if (context.mounted) {
+                              context.router.push(const LoginRoute());
+                            }
+                          },
                         ),
-                      ),
-                      onPressed: () async {
-                        await ref.read(authNotifierProvider.notifier).signOut();
-                        if (context.mounted) {
-                          context.router.replaceAll([const LoginRoute()]);
-                        }
-                      },
-                      child: const Text('Đăng xuất'),
-                    ),
-                  ),
+
                   const SizedBox(height: 60),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(
+    String title, {
+    VoidCallback? onPressed,
+    Color? color,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: color ?? Colors.redAccent,
+          side: BorderSide(color: color ?? Colors.redAccent),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(title),
       ),
     );
   }

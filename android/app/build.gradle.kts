@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pickle_pick"
+    namespace = "com.picklepick.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

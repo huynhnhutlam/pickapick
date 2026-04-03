@@ -18,7 +18,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x' # Keep it consistent with project
+          flutter-version: '3.41.x' # Keep it consistent with project
           channel: 'stable'
           cache: true
           
@@ -27,6 +27,9 @@ jobs:
         
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
         
       - name: Static analysis
         run: flutter analyze
@@ -42,7 +45,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x'
+          flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
           
@@ -73,7 +76,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x'
+          flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
           
@@ -113,7 +116,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x'
+          flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
           
@@ -147,7 +150,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x'
+          flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
           

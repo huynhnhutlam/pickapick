@@ -4,12 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
-
 import '../../../../core/router/app_router.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/common_widgets.dart';
 import '../providers/auth_providers.dart';
+import 'widgets/appbar_auth.dart';
 
 @RoutePage()
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -82,25 +80,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
-        title: Row(
-          children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppTheme.primaryColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.sports_tennis,
-                color: Colors.black,
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Text('Pickle Pick'),
-          ],
+        automaticallyImplyLeading: false,
+        leadingWidth: 70,
+        leading: IconButton(
+          onPressed: () => context.router.maybePop(),
+          icon: const Icon(Icons.arrow_back),
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.white10,
+            padding: const EdgeInsets.all(12),
+          ),
         ),
       ),
       body: SafeArea(
@@ -111,6 +99,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Logo(),
+                const SizedBox(height: 40),
                 Text(
                   'Tạo tài khoản 🏓',
                   style: theme.textTheme.displayLarge?.copyWith(fontSize: 32),

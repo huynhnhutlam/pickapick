@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/common_widgets.dart';
 import '../providers/auth_providers.dart';
+import 'widgets/appbar_auth.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -55,15 +55,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = ref.watch(authNotifierProvider).isLoading;
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leadingWidth: 70,
+        leading: IconButton(
+          onPressed: () => context.router.maybePop(),
+          icon: const Icon(Icons.arrow_back),
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.white10,
+            padding: const EdgeInsets.all(12),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _Logo(),
+                const Logo(),
                 const SizedBox(height: 40),
                 Text(
                   'Chào mừng\ntrở lại 👋',
@@ -134,35 +146,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Logo extends StatelessWidget {
-  const _Logo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppTheme.primaryColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.sports_tennis, color: Colors.black, size: 24),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          'Pickle Pick',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
-        ),
-      ],
     );
   }
 }
