@@ -1,0 +1,167 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # 1. Lint & Static Analysis
+  linter:
+    name: Lint & Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x' # Keep it consistent with project
+          channel: 'stable'
+          cache: true
+          
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+        
+      - name: Static analysis
+        run: flutter analyze
+
+  # 2. Unit & Widget tests
+  tests:
+    name: Run Tests
+    needs: linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+          
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+        
+      - name: Run unit tests
+        run: flutter test
+
+  # 3. Build Android (APK & App Bundle)
+  build-android:
+    name: Build Android
+    needs: tests
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+          
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+        
+      - name: Build APK (Release)
+        run: flutter build apk --release
+        
+      - name: Build App Bundle (Release)
+        run: flutter build appbundle --release
+        
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          
+      - name: Upload App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  # 4. Build iOS (IPA validation or build)
+  build-ios:
+    name: Build iOS
+    needs: tests
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+          
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+        
+      - name: Build iOS (no-codesign)
+        run: flutter build ios --release --no-codesign
+        
+      - name: Zip iOS Build
+        run: zip -r ios_build.zip build/ios/iphoneos
+        
+      - name: Upload iOS Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ios_build.zip
+
+  # 5. Build Web
+  build-web:
+    name: Build Web
+    needs: tests
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+          
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+        
+      - name: Build Web
+        run: flutter build web --release
+        
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
