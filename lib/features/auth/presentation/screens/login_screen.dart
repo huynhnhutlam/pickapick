@@ -63,6 +63,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                IconButton(
+                  onPressed: () => context.router.maybePop(),
+                  icon: const Icon(Icons.arrow_back),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white10,
+                    padding: const EdgeInsets.all(12),
+                  ),
+                ),
+                const SizedBox(height: 24),
                 const _Logo(),
                 const SizedBox(height: 40),
                 Text(
