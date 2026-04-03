@@ -156,6 +156,7 @@ class ProfileScreen extends ConsumerWidget {
                         )
                       : _buildLogoutButton(
                           'Đăng nhập',
+                          color: Theme.of(context).colorScheme.primary,
                           onPressed: () {
                             if (context.mounted) {
                               context.router.push(const LoginRoute());
@@ -173,13 +174,17 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLogoutButton(String title, {VoidCallback? onPressed}) {
+  Widget _buildLogoutButton(
+    String title, {
+    VoidCallback? onPressed,
+    Color? color,
+  }) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.redAccent,
-          side: const BorderSide(color: Colors.redAccent),
+          foregroundColor: color ?? Colors.redAccent,
+          side: BorderSide(color: color ?? Colors.redAccent),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
