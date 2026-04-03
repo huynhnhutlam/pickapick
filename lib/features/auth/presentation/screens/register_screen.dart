@@ -81,7 +81,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: IconButton(
+        leadingWidth: 70,
+        leading: IconButton(
           onPressed: () => context.router.maybePop(),
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
