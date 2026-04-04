@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 
 import '../providers/courts_notifier.dart';
@@ -36,18 +38,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 controller: _searchController,
                 autofocus: true,
                 decoration: const InputDecoration(
-                  hintText: 'Tìm kiếm sân...',
+                  hintText: AppStrings.courtSearchHint,
                   border: InputBorder.none,
                   hintStyle: TextStyle(color: Colors.white54),
                 ),
                 style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
-                  setState(() {
-                    _searchQuery = value.toLowerCase();
-                  });
+                  setState(() => _searchQuery = value.toLowerCase());
                 },
               )
-            : const Text('Tìm sân Pickleball'),
+            : const Text(AppStrings.courtListTitle),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -73,11 +73,11 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           }).toList();
 
           if (filteredCourts.isEmpty) {
-            return const Center(child: Text('Không tìm thấy sân nào.'));
+            return const Center(child: Text(AppStrings.noCourtFound));
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSizes.p16),
             itemCount: filteredCourts.length,
             itemBuilder: (context, index) {
               final court = filteredCourts[index];
@@ -87,7 +87,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               ).format(court.pricePerHour);
 
               return Card(
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: AppSizes.p16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -95,7 +95,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       aspectRatio: 16 / 9,
                       child: ClipRRect(
                         borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(20),
+                          top: Radius.circular(AppSizes.r20),
                         ),
                         child: Image.network(
                           court.images.isNotEmpty
@@ -104,14 +104,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
                             color: Colors.grey[800],
-                            child:
-                                const Icon(Icons.image, color: Colors.white24),
+                            child: const Icon(
+                              Icons.image,
+                              color: Colors.white24,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(AppSizes.p16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -131,43 +133,49 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                   const Icon(
                                     Icons.star,
                                     color: Colors.amber,
-                                    size: 20,
+                                    size: AppSizes.iconLarge,
                                   ),
-                                  const SizedBox(width: 4),
+                                  const SizedBox(width: AppSizes.p4),
                                   Text(court.rating.toStringAsFixed(1)),
                                 ],
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSizes.p8),
                           Text(
                             court.address,
                             style: Theme.of(context).textTheme.bodyMedium,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppSizes.p12),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '$priceFormatted/giờ',
+                                '$priceFormatted${AppStrings.perHour}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: AppSizes.bodyLarge,
                                   color: Colors.greenAccent,
                                 ),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(100, 40),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSizes.p24,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(AppSizes.r12),
+                                  ),
                                 ),
                                 onPressed: () {
                                   context.router.push(
-                                    SlotPickerRoute(courtId: court.id),
+                                    CourtDetailRoute(courtId: court.id),
                                   );
                                 },
-                                child: const Text('Đặt ngay'),
+                                child: const Text(AppStrings.courtListDetails),
                               ),
                             ],
                           ),
@@ -181,7 +189,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Lỗi: $err')),
+        error: (err, stack) =>
+            Center(child: Text('${AppStrings.errorLoading}$err')),
       ),
     );
   }

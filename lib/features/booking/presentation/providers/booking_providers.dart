@@ -1,7 +1,10 @@
 import 'dart:developer' as developer;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../../core/enum/enum.dart';
 
 class BookedCourt {
   final String id;
@@ -11,7 +14,7 @@ class BookedCourt {
   final DateTime date;
   final String slot;
   final double price;
-  final String status;
+  final BookingStatus status;
 
   BookedCourt({
     required this.id,
@@ -21,12 +24,13 @@ class BookedCourt {
     required this.date,
     required this.slot,
     required this.price,
-    this.status = 'Upcoming',
+    this.status = BookingStatus.upcoming,
   });
 
   factory BookedCourt.fromJson(Map<String, dynamic> json) {
     // Assuming a join with facilities: facilities!inner(...)
     final f = json['facilities'] as Map<String, dynamic>?;
+    final c = json['courts'] as Map<String, dynamic>?;
     final images = (f?['images'] as List?)?.cast<String>() ?? [];
     final startTime = (json['start_time'] as String).substring(0, 5);
     final duration = (json['duration_hours'] as num?)?.toInt() ?? 1;
@@ -35,9 +39,14 @@ class BookedCourt {
     final endH = startH + duration;
     final endTime = '${endH.toString().padLeft(2, '0')}:00';
 
+    final facilityName = f?['name'] as String? ?? 'Sân Pickleball';
+    final courtName = c?['name'] as String?;
+    final fullName =
+        courtName != null ? '$facilityName - $courtName' : facilityName;
+
     return BookedCourt(
       id: json['id'] as String,
-      courtName: f?['name'] as String? ?? 'Sân Pickleball',
+      courtName: fullName,
       courtAddress: f?['address'] as String? ?? '',
       courtImage: images.isNotEmpty
           ? images.first
@@ -45,9 +54,7 @@ class BookedCourt {
       date: DateTime.parse(json['booking_date'] as String),
       slot: '$startTime - $endTime',
       price: (json['total_price'] as num).toDouble(),
-      status: json['status'] == 'completed'
-          ? 'Completed'
-          : (json['status'] == 'cancelled' ? 'Cancelled' : 'Upcoming'),
+      status: BookingStatus.fromDb(json['status'] as String?),
     );
   }
 }
@@ -55,16 +62,18 @@ class BookedCourt {
 class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
   RealtimeChannel? _channel;
 
-  BookingNotifier(this._client) : super(const AsyncLoading()) {
+  BookingNotifier(this._client, this._user) : super(const AsyncLoading()) {
     _fetchBookings();
-    _setupRealtime();
+    if (_user != null) {
+      _setupRealtime();
+    }
   }
 
   final SupabaseClient _client;
+  final User? _user;
 
   void _setupRealtime() {
-    final user = _client.auth.currentUser;
-    if (user == null) return;
+    if (_user == null) return;
 
     _channel = _client
         .channel('public:bookings')
@@ -75,7 +84,7 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
             column: 'user_id',
-            value: user.id,
+            value: _user.id,
           ),
           callback: (payload) {
             _fetchBookings();
@@ -91,8 +100,7 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
   }
 
   Future<void> _fetchBookings() async {
-    final user = _client.auth.currentUser;
-    if (user == null) {
+    if (_user == null) {
       state = const AsyncData([]);
       return;
     }
@@ -102,8 +110,8 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
 
       final response = await _client
           .from('bookings')
-          .select('*, facilities:facility_id(*)')
-          .eq('user_id', user.id)
+          .select('*, facilities:facility_id(*), courts:court_id(*)')
+          .eq('user_id', _user.id)
           .order('booking_date', ascending: false);
 
       final bookings = (response as List)
@@ -116,9 +124,12 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
     }
   }
 
-  Future<void> addBooking(BookedCourt newBooking, String facilityId) async {
-    final user = _client.auth.currentUser;
-    if (user == null) return;
+  Future<void> addBooking(
+    BookedCourt newBooking,
+    String facilityId,
+    String courtId,
+  ) async {
+    if (_user == null) return;
 
     try {
       // Parse slot range "HH:mm - HH:mm"
@@ -131,8 +142,9 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
       final duration = endH - startH;
 
       await _client.from('bookings').insert({
-        'user_id': user.id,
+        'user_id': _user.id,
         'facility_id': facilityId,
+        'court_id': courtId,
         'booking_date': newBooking.date.toIso8601String().split('T').first,
         'start_time': startTime,
         'end_time': endTime,
@@ -164,5 +176,6 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
 final bookingProvider =
     StateNotifierProvider<BookingNotifier, AsyncValue<List<BookedCourt>>>(
         (ref) {
-  return BookingNotifier(Supabase.instance.client);
+  final user = ref.watch(authNotifierProvider).valueOrNull;
+  return BookingNotifier(Supabase.instance.client, user);
 });

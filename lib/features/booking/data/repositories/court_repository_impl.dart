@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entities/court.dart';
+import '../../domain/entities/sub_court.dart';
 import '../../domain/repositories/court_repository.dart';
 
 /// Supabase-backed implementation of [CourtRepository].
@@ -33,6 +34,29 @@ class SupabaseCourtRepository implements CourtRepository {
     }
   }
 
+  @override
+  Future<List<SubCourt>> getSubCourts(String facilityId) async {
+    try {
+      final response = await _client
+          .from('courts')
+          .select()
+          .eq('facility_id', facilityId)
+          .eq('is_active', true)
+          .order('court_number');
+      return (response as List)
+          .map((json) => SubCourt.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (e, s) {
+      developer.log(
+        'Failed to fetch sub-courts for facility $facilityId',
+        name: 'CourtRepository',
+        error: e,
+        stackTrace: s,
+      );
+      return [];
+    }
+  }
+
   Future<List<Court>> getFeaturedCourts() =>
       _fetchFacilities(minRating: 4.5, limit: 6);
 
@@ -54,6 +78,25 @@ class SupabaseCourtRepository implements CourtRepository {
         error: e,
         stackTrace: s,
       );
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getRentalServices() async {
+    try {
+      final response = await _client
+          .from('rental_services')
+          .select()
+          .eq('is_active', true)
+          .order('name');
+      return (response as List).cast<Map<String, dynamic>>();
+    } catch (e, s) {
+      developer.log(
+        'Failed to fetch rental services',
+        name: 'CourtRepository',
+        error: e,
+        stackTrace: s,
+      );
+      return [];
     }
   }
 
@@ -84,13 +127,13 @@ class SupabaseCourtRepository implements CourtRepository {
     }
   }
 
-  Future<List<String>> getBookedSlots(String facilityId, DateTime date) async {
+  Future<List<String>> getBookedSlots(String courtId, DateTime date) async {
     try {
       final dateStr = date.toIso8601String().split('T').first;
       final response = await _client
           .from('bookings')
           .select('start_time, duration_hours')
-          .eq('facility_id', facilityId)
+          .eq('court_id', courtId)
           .eq('booking_date', dateStr)
           .neq('status', 'cancelled');
 
@@ -162,12 +205,20 @@ final allCourtsProvider = FutureProvider<List<Court>>(
 );
 
 final bookedSlotsProvider =
-    FutureProvider.family<List<String>, ({String facilityId, DateTime date})>(
+    FutureProvider.family<List<String>, ({String courtId, DateTime date})>(
   (ref, args) => ref
       .watch(courtRepositoryProvider)
-      .getBookedSlots(args.facilityId, args.date),
+      .getBookedSlots(args.courtId, args.date),
 );
 
 final courtDetailsProvider = FutureProvider.family<Court, String>(
   (ref, id) => ref.watch(courtRepositoryProvider).getCourtDetails(id),
+);
+
+final subCourtsProvider = FutureProvider.family<List<SubCourt>, String>(
+  (ref, id) => ref.watch(courtRepositoryProvider).getSubCourts(id),
+);
+
+final rentalServicesProvider = FutureProvider<List<Map<String, dynamic>>>(
+  (ref) => ref.watch(courtRepositoryProvider).getRentalServices(),
 );

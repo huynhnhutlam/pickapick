@@ -8,6 +8,7 @@ import 'package:pickle_pick/features/booking/presentation/providers/booking_prov
 import 'package:pickle_pick/features/booking/presentation/screens/booking_detail_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_history_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_summary_screen.dart';
+import 'package:pickle_pick/features/booking/presentation/screens/court_detail_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/court_list_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/court_slot_picker_screen.dart';
 import 'package:pickle_pick/features/home/presentation/screens/home_screen.dart';
@@ -32,7 +33,13 @@ class AuthGuard extends AutoRouteGuard {
     if (user != null) {
       resolver.next();
     } else {
-      resolver.redirect(const LoginRoute());
+      resolver.redirect(
+        LoginRoute(
+          onResult: (success) {
+            resolver.next(success);
+          },
+        ),
+      );
     }
   }
 }
@@ -59,8 +66,11 @@ class AppRouter extends RootStackRouter {
         ),
         AutoRoute(
           path: '/court/:courtId',
+          page: CourtDetailRoute.page,
+        ),
+        AutoRoute(
+          path: '/court/:courtId/slots',
           page: SlotPickerRoute.page,
-          // guards: [AuthGuard()],
         ),
         AutoRoute(path: '/product-details', page: ProductDetailsRoute.page),
         AutoRoute(path: '/cart', page: CartRoute.page),

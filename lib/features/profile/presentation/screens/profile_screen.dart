@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
@@ -17,7 +18,7 @@ class ProfileScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: AppSizes.profileExpandedHeight,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -36,12 +37,15 @@ class ProfileScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const CircleAvatar(
-                        radius: 40,
+                        radius: AppSizes.iconXL,
                         backgroundColor: Colors.white,
-                        child:
-                            Icon(Icons.person, size: 40, color: Colors.black),
+                        child: Icon(
+                          Icons.person,
+                          size: AppSizes.iconXL,
+                          color: Colors.black,
+                        ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSizes.p12),
                       Consumer(
                         builder: (context, ref, child) {
                           final user = ref.watch(authNotifierProvider).value;
@@ -55,7 +59,7 @@ class ProfileScreen extends ConsumerWidget {
                               Text(
                                 fullName,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: AppSizes.h5,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -65,7 +69,7 @@ class ProfileScreen extends ConsumerWidget {
                                   email,
                                   style: TextStyle(
                                     color: Colors.black.withValues(alpha: 0.5),
-                                    fontSize: 13,
+                                    fontSize: AppSizes.labelMedium,
                                   ),
                                 ),
                             ],
@@ -80,15 +84,18 @@ class ProfileScreen extends ConsumerWidget {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSizes.p24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Hoạt động của tôi',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: AppSizes.titleLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   _buildMenuCard(
                     context,
                     icon: Icons.calendar_month,
@@ -100,7 +107,7 @@ class ProfileScreen extends ConsumerWidget {
                     onTap: () =>
                         context.router.push(const BookingHistoryRoute()),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.shopping_bag_outlined,
@@ -109,19 +116,22 @@ class ProfileScreen extends ConsumerWidget {
                     onTap: () =>
                         context.router.push(const PurchaseHistoryRoute()),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.favorite_border,
                     title: 'Yêu thích',
                     subtitle: 'Sân và sản phẩm đã lưu',
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppSizes.p32),
                   const Text(
                     'Tài khoản',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: AppSizes.titleLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   _buildMenuCard(
                     context,
                     icon: Icons.person_outline,
@@ -129,22 +139,21 @@ class ProfileScreen extends ConsumerWidget {
                     subtitle: 'Cập nhật thông tin của bạn',
                     onTap: () => context.router.push(const EditProfileRoute()),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.notifications_none,
                     title: 'Thông báo',
                     subtitle: 'Cài đặt thông báo',
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.help_outline,
                     title: 'Hỗ trợ',
                     subtitle: 'Liên hệ với chúng tôi',
                   ),
-                  const SizedBox(height: 48),
-                  // Logout button
+                  const SizedBox(height: AppSizes.p48),
                   (ref.watch(authNotifierProvider).value != null)
                       ? _buildLogoutButton(
                           'Đăng xuất',
@@ -159,12 +168,11 @@ class ProfileScreen extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.primary,
                           onPressed: () {
                             if (context.mounted) {
-                              context.router.push(const LoginRoute());
+                              context.router.push(LoginRoute());
                             }
                           },
                         ),
-
-                  const SizedBox(height: 60),
+                  const SizedBox(height: AppSizes.p60),
                 ],
               ),
             ),
@@ -185,9 +193,9 @@ class ProfileScreen extends ConsumerWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: color ?? Colors.redAccent,
           side: BorderSide(color: color ?? Colors.redAccent),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.p16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSizes.r16),
           ),
         ),
         onPressed: onPressed,
@@ -208,22 +216,23 @@ class ProfileScreen extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.p16),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSizes.r16),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppSizes.p10),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.r12),
               ),
-              child: Icon(icon, size: 24, color: theme.primaryColor),
+              child: Icon(icon,
+                  size: AppSizes.iconLarge, color: theme.primaryColor),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSizes.p16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,34 +241,40 @@ class ProfileScreen extends ConsumerWidget {
                     title,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: AppSizes.bodyLarge,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: Colors.white38, fontSize: 12),
+                    style: const TextStyle(
+                      color: Colors.white38,
+                      fontSize: AppSizes.labelSmall,
+                    ),
                   ),
                 ],
               ),
             ),
             if (badge != null) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.p8,
+                  vertical: AppSizes.p4,
+                ),
                 decoration: BoxDecoration(
                   color: theme.primaryColor,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSizes.p10),
                 ),
                 child: Text(
                   badge,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 10,
+                    fontSize: AppSizes.labelTiny,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.p8),
             ],
             const Icon(Icons.chevron_right, color: Colors.white24),
           ],
