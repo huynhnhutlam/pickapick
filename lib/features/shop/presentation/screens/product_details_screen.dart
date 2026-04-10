@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
@@ -22,9 +23,8 @@ class ProductDetailsScreen extends ConsumerWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Elegant Header with Hero
           SliverAppBar(
-            expandedHeight: 400,
+            expandedHeight: AppSizes.productDetailImageHeight,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
@@ -39,13 +39,12 @@ class ProductDetailsScreen extends ConsumerWidget {
                         color: Colors.grey[900],
                         child: const Icon(
                           Icons.shopping_bag,
-                          size: 100,
+                          size: AppSizes.iconCategory,
                           color: Colors.white12,
                         ),
                       ),
                     ),
                   ),
-                  // Gradient for better readability
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -73,10 +72,9 @@ class ProductDetailsScreen extends ConsumerWidget {
               ),
             ],
           ),
-
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSizes.p24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -86,12 +84,12 @@ class ProductDetailsScreen extends ConsumerWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                          horizontal: AppSizes.p12,
+                          vertical: AppSizes.p4 + 2,
                         ),
                         decoration: BoxDecoration(
                           color: theme.primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppSizes.r20),
                           border: Border.all(
                             color: theme.primaryColor.withValues(alpha: 0.3),
                           ),
@@ -101,40 +99,40 @@ class ProductDetailsScreen extends ConsumerWidget {
                           style: TextStyle(
                             color: theme.primaryColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: AppSizes.labelSmall,
                           ),
                         ),
                       ),
                       if (isSale)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
+                            horizontal: AppSizes.p12,
+                            vertical: AppSizes.p4 + 2,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.redAccent.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppSizes.r20),
                           ),
                           child: const Text(
                             'TIẾT KIỆM 20%',
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                              fontSize: AppSizes.labelSmall,
                             ),
                           ),
                         ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   Text(
                     product.title,
                     style: const TextStyle(
-                      fontSize: 28,
+                      fontSize: AppSizes.h2,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
 
                   // Pricing
                   Row(
@@ -143,17 +141,17 @@ class ProductDetailsScreen extends ConsumerWidget {
                       Text(
                         (product.salePrice ?? product.price).toVND(),
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: AppSizes.h1_5,
                           fontWeight: FontWeight.bold,
                           color: theme.primaryColor,
                         ),
                       ),
                       if (isSale) ...[
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSizes.p12),
                         Text(
                           product.price.toVND(),
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: AppSizes.titleLarge,
                             decoration: TextDecoration.lineThrough,
                             color: Colors.white38,
                           ),
@@ -161,37 +159,43 @@ class ProductDetailsScreen extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppSizes.p32),
 
                   // Description
                   const Text(
                     'Mô tả sản phẩm',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: AppSizes.titleLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.p12),
                   Text(
                     product.description,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                       height: 1.6,
-                      fontSize: 15,
+                      fontSize: AppSizes.bodyMedium,
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppSizes.p32),
 
-                  // Specs/Attributes
+                  // Specs
                   const Text(
                     'Thông số kỹ thuật',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: AppSizes.titleLarge,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   _buildSpecRow('Chất liệu', 'Carbon Fiber Pro'),
                   _buildSpecRow('Trọng lượng', '220g - 240g'),
                   _buildSpecRow('Kích thước', '16.5" x 7.5"'),
                   _buildSpecRow('Bảo hành', '12 tháng'),
 
-                  const SizedBox(height: 120), // Padding for Bottom Bar
+                  const SizedBox(height: AppSizes.productDetailImageHeight / 3),
                 ],
               ),
             ),
@@ -199,8 +203,11 @@ class ProductDetailsScreen extends ConsumerWidget {
         ],
       ),
       bottomSheet: Container(
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        height: AppSizes.productBottomSheetHeight,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.p24,
+          vertical: AppSizes.p20,
+        ),
         decoration: BoxDecoration(
           color: theme.scaffoldBackgroundColor,
           border: Border(
@@ -210,15 +217,15 @@ class ProductDetailsScreen extends ConsumerWidget {
         child: Row(
           children: [
             Container(
-              width: 60,
-              height: 60,
+              width: AppSizes.quickActionBoxSize,
+              height: AppSizes.quickActionBoxSize,
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizes.r16),
               ),
               child: const Icon(Icons.shopping_cart_outlined),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSizes.p16),
             Expanded(
               child: NeonButton(
                 label: 'THÊM VÀO GIỎ',
@@ -227,7 +234,9 @@ class ProductDetailsScreen extends ConsumerWidget {
                   ref.read(cartProvider.notifier).add(product);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Đã thêm ${product.title} vào giò hàng'),
+                      content: Text(
+                        'Đã thêm ${product.title} vào giỏ hàng',
+                      ),
                       action: SnackBarAction(
                         label: 'XEM GIỎ',
                         onPressed: () => context.router.push(const CartRoute()),
@@ -235,7 +244,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                     ),
                   );
                 },
-                radius: 16,
+                radius: AppSizes.r16,
               ),
             ),
           ],
@@ -244,16 +253,20 @@ class ProductDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.white38)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-        ],
-      ),
-    );
-  }
+  Widget _buildSpecRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: AppSizes.p12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white38),
+            ),
+            Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 }

@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/router/app_router.dart';
@@ -56,7 +58,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           // Email confirmation required
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Vui lòng kiểm tra email để xác nhận tài khoản!'),
+              content: Text(AppStrings.msgCheckEmail),
               backgroundColor: Colors.orange,
             ),
           );
@@ -64,7 +66,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       },
       error: (e, _) {
         _logger.severe('Sign up error', e);
-        final msg = e is AuthException ? e.message : 'Đăng ký thất bại';
+        final msg =
+            e is AuthException ? e.message : AppStrings.msgRegisterFailed;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: Colors.red),
@@ -87,69 +90,73 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
             backgroundColor: Colors.white10,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSizes.p12),
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.p28,
+            vertical: AppSizes.p24,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Logo(),
-                const SizedBox(height: 40),
+                const SizedBox(height: AppSizes.p40),
                 Text(
-                  'Tạo tài khoản 🏓',
-                  style: theme.textTheme.displayLarge?.copyWith(fontSize: 32),
+                  AppStrings.registerTitle,
+                  style: theme.textTheme.displayLarge
+                      ?.copyWith(fontSize: AppSizes.h1_5),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSizes.p8),
                 Text(
-                  'Gia nhập cộng đồng Pickleball ngay hôm nay',
+                  AppStrings.registerSubtitle,
                   style: theme.textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSizes.p32),
                 TextFormField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
                   decoration: const InputDecoration(
-                    labelText: 'Họ và tên',
+                    labelText: AppStrings.labelFullName,
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   validator: (v) =>
-                      (v == null || v.isEmpty) ? 'Vui lòng nhập tên' : null,
+                      (v == null || v.isEmpty) ? AppStrings.valEmptyName : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
-                    labelText: 'Số điện thoại',
+                    labelText: AppStrings.labelPhone,
                     prefixIcon: Icon(Icons.phone_outlined),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    labelText: AppStrings.labelEmail,
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Vui lòng nhập email';
-                    if (!v.contains('@')) return 'Email không hợp lệ';
+                    if (v == null || v.isEmpty) return AppStrings.valEmptyEmail;
+                    if (!v.contains('@')) return AppStrings.valInvalidEmail;
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    labelText: 'Mật khẩu',
+                    labelText: AppStrings.labelPassword,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -163,48 +170,50 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Vui lòng nhập mật khẩu';
-                    if (v.length < 6) return 'Mật khẩu tối thiểu 6 ký tự';
+                    if (v == null || v.isEmpty) {
+                      return AppStrings.valEmptyPassword;
+                    }
+                    if (v.length < 6) return AppStrings.valShortPassword;
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _confirmController,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    labelText: 'Xác nhận mật khẩu',
+                    labelText: AppStrings.labelConfirmPassword,
                     prefixIcon: Icon(Icons.lock_outline),
                   ),
                   validator: (v) {
                     if (v != _passwordController.text) {
-                      return 'Mật khẩu không khớp';
+                      return AppStrings.valPasswordMismatch;
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSizes.p32),
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: AppSizes.buttonHeight,
                   child: NeonButton(
-                    label: 'ĐĂNG KÝ',
+                    label: AppStrings.btnRegister,
                     onPressed: _submit,
                     isLoading: isLoading,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.p24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Đã có tài khoản? ',
+                      AppStrings.alreadyHaveAccount,
                       style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () => context.router.back(),
                       child: Text(
-                        'Đăng nhập',
+                        AppStrings.login,
                         style: TextStyle(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,

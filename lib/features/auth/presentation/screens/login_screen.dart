@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/router/app_router.dart';
@@ -10,7 +13,8 @@ import 'widgets/appbar_auth.dart';
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  final void Function(bool success)? onResult;
+  const LoginScreen({super.key, this.onResult});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -39,10 +43,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.read(authNotifierProvider);
     authState.whenOrNull(
       data: (user) {
-        if (user != null) context.router.replaceAll([const MainWrapperRoute()]);
+        if (user != null) {
+          if (widget.onResult != null) {
+            widget.onResult?.call(true);
+          } else {
+            ref.read(analyticsProvider).logLogin();
+            context.router.replaceAll([const MainWrapperRoute()]);
+          }
+        }
       },
       error: (e, _) {
-        final msg = e is AuthException ? e.message : 'Đăng nhập thất bại';
+        final msg = e is AuthException ? e.message : AppStrings.msgLoginFailed;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: Colors.red),
         );
@@ -53,6 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authNotifierProvider).isLoading;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,78 +75,81 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
             backgroundColor: Colors.white10,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSizes.p12),
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSizes.p28,
+            vertical: AppSizes.p24,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Logo(),
-                const SizedBox(height: 40),
+                const SizedBox(height: AppSizes.p40),
                 Text(
-                  'Chào mừng\ntrở lại 👋',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        fontSize: 36,
-                        height: 1.2,
-                      ),
+                  AppStrings.loginTitle,
+                  style: theme.textTheme.displayLarge?.copyWith(
+                    fontSize: AppSizes.displayLarge,
+                    height: 1.2,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSizes.p8),
                 Text(
-                  'Đăng nhập để đặt sân và mua sắm',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  AppStrings.loginSubtitle,
+                  style: theme.textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: AppSizes.p40),
                 _EmailField(controller: _emailController),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.p16),
                 _PasswordField(
                   controller: _passwordController,
                   obscure: _obscurePassword,
                   onToggle: () =>
                       setState(() => _obscurePassword = !_obscurePassword),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.p12),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {},
                     child: Text(
-                      'Quên mật khẩu?',
+                      AppStrings.forgotPassword,
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.p24),
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: AppSizes.buttonHeight,
                   child: NeonButton(
-                    label: 'ĐĂNG NHẬP',
+                    label: AppStrings.btnLogin,
                     onPressed: _submit,
                     isLoading: isLoading,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSizes.p32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Chưa có tài khoản? ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      AppStrings.dontHaveAccount,
+                      style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () => context.router.push(const RegisterRoute()),
                       child: Text(
-                        'Đăng ký ngay',
+                        AppStrings.registerNow,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -160,12 +175,12 @@ class _EmailField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        labelText: 'Email',
+        labelText: AppStrings.labelEmail,
         prefixIcon: Icon(Icons.email_outlined),
       ),
       validator: (v) {
-        if (v == null || v.isEmpty) return 'Vui lòng nhập email';
-        if (!v.contains('@')) return 'Email không hợp lệ';
+        if (v == null || v.isEmpty) return AppStrings.valEmptyEmail;
+        if (!v.contains('@')) return AppStrings.valInvalidEmail;
         return null;
       },
     );
@@ -188,7 +203,7 @@ class _PasswordField extends StatelessWidget {
       controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
-        labelText: 'Mật khẩu',
+        labelText: AppStrings.labelPassword,
         prefixIcon: const Icon(Icons.lock_outline),
         suffixIcon: IconButton(
           icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
@@ -196,8 +211,8 @@ class _PasswordField extends StatelessWidget {
         ),
       ),
       validator: (v) {
-        if (v == null || v.isEmpty) return 'Vui lòng nhập mật khẩu';
-        if (v.length < 6) return 'Mật khẩu tối thiểu 6 ký tự';
+        if (v == null || v.isEmpty) return AppStrings.valEmptyPassword;
+        if (v.length < 6) return AppStrings.valShortPassword;
         return null;
       },
     );

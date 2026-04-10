@@ -54,6 +54,7 @@ unlinked_spec.ds
 /android/app/profile
 /android/app/release
 *.jks
+**/android/app/google-services.json
 
 ## iOS/XCode
 **/ios/**/*.mode1v3
@@ -84,6 +85,7 @@ unlinked_spec.ds
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Runner/GoogleService-Info.plist
 
 ## macOS
 **/Flutter/ephemeral/
@@ -118,3 +120,19 @@ app.*.map.json
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+# Agents
+.agents
+.augment
+.claude
+.commandcode
+.agent
+.skillsrc
+CLAUDE.md
+AGENTS.md
+.github/instructions
+.github/skills
+.github/prompts
+
+# Firebase
+/lib/core/services/firebase_services/firebase_options.dart

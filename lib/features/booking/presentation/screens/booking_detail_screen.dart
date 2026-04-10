@@ -2,9 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../../core/enum/enum.dart';
+import '../../domain/entities/booked_court.dart';
 import '../providers/booking_providers.dart';
 
 @RoutePage()
@@ -20,60 +24,66 @@ class BookingDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chi tiết đặt sân'),
+        title: const Text(AppStrings.bookingDetailTitle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.router.maybePop(),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.p24),
         child: Column(
           children: [
-            // Status Card
+            // ─── QR / Check-in Card ────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSizes.p20),
               decoration: BoxDecoration(
                 color: theme.cardColor,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                borderRadius: BorderRadius.circular(AppSizes.r24),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.05),
+                ),
               ),
               child: Column(
                 children: [
                   const Text(
-                    'Mã vé check-in',
+                    AppStrings.checkInCode,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: AppSizes.bodyLarge,
                       fontWeight: FontWeight.w600,
                       color: Colors.white70,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.p20),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSizes.p16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppSizes.r20),
                     ),
                     child: QrImageView(
                       data: booking.id,
                       version: QrVersions.auto,
-                      size: 200.0,
+                      size: AppSizes.qrSize,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   Text(
                     booking.id.toUpperCase().substring(0, 8),
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: AppSizes.titleLarge,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.p24),
                   const Divider(color: Colors.white10),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Trạng thái',
+                        AppStrings.labelStatus,
                         style: TextStyle(color: Colors.white54),
                       ),
                       _StatusBadge(status: booking.status),
@@ -82,52 +92,60 @@ class BookingDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-            // Details Card
+
+            const SizedBox(height: AppSizes.p24),
+
+            // ─── Details Card ──────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSizes.p24),
               decoration: BoxDecoration(
                 color: theme.cardColor,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(AppSizes.r24),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Thông tin sân',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    AppStrings.courtInfoSection,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSizes.titleLarge,
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.p20),
                   _DetailRow(
                     icon: Icons.location_on_outlined,
-                    label: 'Tên sân',
+                    label: AppStrings.labelCourtName,
                     value: booking.courtName,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   _DetailRow(
                     icon: Icons.calendar_today_outlined,
-                    label: 'Ngày chơi',
+                    label: AppStrings.labelPlayDate,
                     value: dateFormat.format(booking.date),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   _DetailRow(
                     icon: Icons.access_time,
-                    label: 'Giờ chơi',
+                    label: AppStrings.labelPlayTime,
                     value: booking.slot,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.p24),
                   const Divider(color: Colors.white10),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.p24),
                   const Text(
-                    'Thanh toán',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    AppStrings.paymentSection,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSizes.titleLarge,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.p16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Tổng tiền',
+                        AppStrings.labelTotalMoney,
                         style: TextStyle(color: Colors.white54),
                       ),
                       Text(
@@ -135,7 +153,7 @@ class BookingDetailScreen extends StatelessWidget {
                         style: TextStyle(
                           color: theme.primaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: AppSizes.h3,
                         ),
                       ),
                     ],
@@ -143,77 +161,112 @@ class BookingDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
-            if (booking.status == 'Upcoming')
+
+            const SizedBox(height: AppSizes.p32),
+
+            // ─── Cancel Button (Upcoming only) ─────────────────────────────
+            if (booking.status == BookingStatus.upcoming)
               Consumer(
                 builder: (context, ref, child) => SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: AppSizes.buttonHeight,
                   child: OutlinedButton.icon(
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Hủy đặt sân'),
-                          content: const Text(
-                            'Bạn có chắc chắn muốn hủy lịch đặt sân này không?',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text(
-                                'KHÔNG',
-                                style: TextStyle(color: Colors.white54),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                try {
-                                  await ref
-                                      .read(bookingProvider.notifier)
-                                      .cancelBooking(booking.id);
-                                  if (context.mounted) {
-                                    context.router.back();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Hủy thành công'),
-                                      ),
-                                    );
-                                  }
-                                } catch (e) {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Lỗi: $e')),
-                                    );
-                                  }
-                                }
-                              },
-                              child: const Text(
-                                'CÓ',
-                                style: TextStyle(color: Colors.redAccent),
-                              ),
-                            ),
-                          ],
+                        builder: (context) => _CancelDialog(
+                          bookingId: booking.id,
+                          notifier: ref.read(bookingProvider.notifier),
                         ),
                       );
                     },
                     icon: const Icon(Icons.cancel_outlined),
-                    label: const Text('Hủy đặt sân'),
+                    label: const Text(AppStrings.btnCancelBooking),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.redAccent,
                       side: const BorderSide(color: Colors.redAccent),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSizes.r16),
                       ),
                     ),
                   ),
                 ),
               ),
-            const SizedBox(height: 100),
+
+            const SizedBox(height: AppSizes.bottomNavSpacing),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Extracted cancel confirmation dialog to keep the main screen widget slim.
+class _CancelDialog extends StatelessWidget {
+  final String bookingId;
+  final Booking notifier;
+
+  const _CancelDialog({required this.bookingId, required this.notifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(AppStrings.cancelBookingTitle),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(AppStrings.cancelBookingContent),
+          SizedBox(height: AppSizes.p12),
+          Text(
+            AppStrings.cancelPolicy24hBefore,
+            style: TextStyle(
+              fontSize: AppSizes.labelSmall,
+              color: Colors.greenAccent,
+            ),
+          ),
+          Text(
+            AppStrings.cancelPolicy24hWithin,
+            style: TextStyle(
+              fontSize: AppSizes.labelSmall,
+              color: Colors.orangeAccent,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            AppStrings.btnNo,
+            style: TextStyle(color: Colors.white54),
+          ),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context);
+            try {
+              await notifier.cancelBooking(bookingId);
+              if (context.mounted) {
+                context.router.back();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text(AppStrings.msgCancelSuccess)),
+                );
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${AppStrings.errorLoading}$e')),
+                );
+              }
+            }
+          },
+          child: const Text(
+            AppStrings.btnYes,
+            style: TextStyle(color: Colors.redAccent),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -233,19 +286,29 @@ class _DetailRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Theme.of(context).primaryColor),
-        const SizedBox(width: 12),
+        Icon(
+          icon,
+          size: AppSizes.iconLarge,
+          color: Theme.of(context).primaryColor,
+        ),
+        const SizedBox(width: AppSizes.p12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label,
-              style: const TextStyle(color: Colors.white38, fontSize: 12),
+              style: const TextStyle(
+                color: Colors.white38,
+                fontSize: AppSizes.labelSmall,
+              ),
             ),
             const SizedBox(height: 2),
             Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: AppSizes.bodyLarge,
+              ),
             ),
           ],
         ),
@@ -255,49 +318,27 @@ class _DetailRow extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  final String status;
+  final BookingStatus status;
+
   const _StatusBadge({required this.status});
 
   @override
   Widget build(BuildContext context) {
-    Color color;
-    String text;
-    switch (status) {
-      case 'Upcoming':
-      case 'confirmed':
-        color = Colors.green;
-        text = 'Đã xác nhận';
-        break;
-      case 'pending':
-        color = Colors.orange;
-        text = 'Chờ xử lý';
-        break;
-      case 'cancelled':
-        color = Colors.red;
-        text = 'Đã hủy';
-        break;
-      case 'Completed':
-      case 'completed':
-        color = Colors.blue;
-        text = 'Hoàn thành';
-        break;
-      default:
-        color = Colors.grey;
-        text = status;
-    }
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.p12,
+        vertical: AppSizes.p4 + 2,
+      ),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        color: status.badgeColor,
+        borderRadius: BorderRadius.circular(AppSizes.r10),
+        border: Border.all(color: status.badgeBorderColor),
       ),
       child: Text(
-        text,
+        status.label.toUpperCase(),
         style: TextStyle(
-          color: color,
-          fontSize: 12,
+          color: status.color,
+          fontSize: AppSizes.labelSmall,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -1,3 +1,5 @@
+import '../../../../core/enum/enum.dart';
+
 class OrderItem {
   final String id;
   final String productName;
@@ -27,8 +29,8 @@ class OrderItem {
 class ShopOrder {
   final String id;
   final String orderNumber;
-  final String status;
-  final String paymentStatus;
+  final OrderStatus status;
+  final PaymentStatus paymentStatus;
   final double totalAmount;
   final DateTime createdAt;
   final List<OrderItem> items;
@@ -51,8 +53,8 @@ class ShopOrder {
     return ShopOrder(
       id: json['id'] as String,
       orderNumber: json['order_number'] as String? ?? 'DH-000000',
-      status: json['status'] as String? ?? 'pending',
-      paymentStatus: json['payment_status'] as String? ?? 'unpaid',
+      status: OrderStatus.fromDb(json['status'] as String?),
+      paymentStatus: PaymentStatus.fromDb(json['payment_status'] as String?),
       totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(
         json['created_at'] as String? ?? DateTime.now().toIso8601String(),
