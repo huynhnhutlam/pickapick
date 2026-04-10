@@ -122,19 +122,23 @@ class BookingSummary extends _$BookingSummary {
 
 @riverpod
 double equipmentTotalPrice(EquipmentTotalPriceRef ref) {
-  return ref.watch(equipmentSelectionProvider.select(
-    (s) =>
-        s.valueOrNull?.fold<double>(
-          0,
-          (sum, e) => sum + (e.pricePerUnit * e.quantity),
-        ) ??
-        0.0,
-  ));
+  return ref.watch(
+    equipmentSelectionProvider.select(
+      (s) =>
+          s.valueOrNull?.fold<double>(
+            0,
+            (sum, e) => sum + (e.pricePerUnit * e.quantity),
+          ) ??
+          0.0,
+    ),
+  );
 }
 
 @riverpod
-double totalBookingPrice(TotalBookingPriceRef ref,
-    {required double basePrice}) {
+double totalBookingPrice(
+  TotalBookingPriceRef ref, {
+  required double basePrice,
+}) {
   final equipmentPrice = ref.watch(equipmentTotalPriceProvider);
   final discountAmount =
       ref.watch(bookingSummaryProvider.select((s) => s.discountAmount));
