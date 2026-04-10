@@ -274,4 +274,3 @@ class SupabaseCourtRepository implements CourtRepository {
     );
   }
 }
-
