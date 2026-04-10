@@ -20,7 +20,8 @@ class SlotPickerScreen extends ConsumerStatefulWidget {
 }
 
 class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   final List<String> _selectedSlots = [];
   String? _selectedSubCourtId;
 
@@ -135,7 +136,9 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
           )
         : const AsyncValue<List<String>>.data([]);
 
-    final bookedSlots = bookedSlotsAsync.value?.toSet() ?? {};
+    // We use .value to check data, but we also check .isLoading to prevent flicker
+    final bookedSlotsSet = bookedSlotsAsync.value?.toSet() ?? {};
+    final isAvailabilityLoading = bookedSlotsAsync.isLoading;
 
     SubCourt? selectedSubCourt;
     if (subCourtsAsync.value != null && _selectedSubCourtId != null) {
@@ -186,8 +189,10 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
 
                   return GestureDetector(
                     onTap: () {
+                      final normalized =
+                          DateTime(date.year, date.month, date.day);
                       setState(() {
-                        _selectedDate = date;
+                        _selectedDate = normalized;
                         _selectedSlots.clear();
                       });
                     },
@@ -374,13 +379,29 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
               itemBuilder: (context, index) {
                 final slot = _slots[index];
                 final isPast = _isSlotInPast(slot);
-                final isBooked = bookedSlots.contains(slot);
+
+                // Correctly check for overlaps with booked ranges
+                final isBooked = bookedSlotsSet.any((range) {
+                  try {
+                    final parts = range.split(' - ');
+                    if (parts.length != 2) return false;
+                    return slot.compareTo(parts[0]) >= 0 &&
+                        slot.compareTo(parts[1]) < 0;
+                  } catch (e) {
+                    return false;
+                  }
+                });
+
                 final isSelected = _selectedSlots.contains(slot);
-                final isDisabled = isBooked || isPast;
+
+                // If loading, we treat as disabled to prevent clicking something
+                // that might be booked, and to avoid flicker.
+                final isDisabled = isAvailabilityLoading || isBooked || isPast;
 
                 return GestureDetector(
-                  onTap:
-                      isDisabled ? null : () => _onSlotTap(slot, bookedSlots),
+                  onTap: isDisabled
+                      ? null
+                      : () => _onSlotTap(slot, bookedSlotsSet),
                   child: Container(
                     decoration: BoxDecoration(
                       color: isSelected
@@ -395,15 +416,26 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                       ),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
-                      slot,
-                      style: TextStyle(
-                        color: isSelected
-                            ? Colors.black
-                            : (isDisabled ? Colors.white24 : Colors.white),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: isAvailabilityLoading && !isPast && !isBooked
+                        ? const SizedBox(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white24,
+                            ),
+                          )
+                        : Text(
+                            slot,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.black
+                                  : (isDisabled
+                                      ? Colors.white24
+                                      : Colors.white),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 );
               },

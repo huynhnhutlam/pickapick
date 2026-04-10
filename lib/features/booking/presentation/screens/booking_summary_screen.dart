@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -159,6 +161,7 @@ class BookingSummaryScreen extends ConsumerWidget {
       if (!context.mounted) return;
       _showSuccessDialog(context, theme);
     } catch (e) {
+      developer.log('Booking error', error: e, name: 'BookingSummary');
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(

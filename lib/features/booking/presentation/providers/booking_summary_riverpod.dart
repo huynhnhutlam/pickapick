@@ -1,9 +1,10 @@
-import 'package:pickle_pick/features/booking/domain/entities/booked_court.dart';
-import 'package:pickle_pick/features/booking/domain/entities/equipment.dart';
-import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
-import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../core/enum/enum.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../domain/usecases/confirm_booking_use_case.dart';
+import 'booking_providers.dart';
+import 'court_providers.dart';
 
 part 'booking_summary_riverpod.g.dart';
 
@@ -80,43 +81,59 @@ class BookingSummary extends _$BookingSummary {
 
     state = state.copyWith(isProcessing: true);
 
-    try {
-      final selectedEquipmentsAsync = ref.read(equipmentSelectionProvider);
-      final bookingNotifier = ref.read(bookingProvider.notifier);
-
-      final equipments = selectedEquipmentsAsync.valueOrNull ?? <Equipment>[];
-      final finalPrice =
-          ref.read(totalBookingPriceProvider(basePrice: basePrice));
-
-      final booking = BookedCourt(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        courtName: courtName,
-        courtAddress: courtAddress,
-        courtImage: courtImage,
-        date: selectedDate,
-        slot: selectedSlot,
-        price: finalPrice,
-      );
-
-      await bookingNotifier.addBooking(
-        newBooking: booking,
-        facilityId: facilityId,
-        courtId: courtId,
-        equipment: equipments,
-        voucherCode: state.isVoucherApplied ? state.voucherCode : null,
-        discountAmount: state.discountAmount,
-        paymentMethod: state.selectedPaymentMethod.name,
-      );
-
-      ref.invalidate(
-        bookedSlotsProvider(
-          courtId: courtId,
-          date: selectedDate,
-        ),
-      );
-    } finally {
+    final user = await ref.read(authNotifierProvider.future);
+    if (user == null) {
       state = state.copyWith(isProcessing: false);
+      throw Exception('Vui lòng đăng nhập để đặt sân');
     }
+
+    final useCase = ref.read(confirmBookingUseCaseProvider);
+    final equipments = await ref.read(equipmentSelectionProvider.future);
+
+    // Tính toán giá trực tiếp để tránh CircularDependencyError
+    // do totalBookingPriceProvider đang watch bookingSummaryProvider
+    final equipmentPrice = ref.read(equipmentTotalPriceProvider);
+    final finalPrice = (basePrice + equipmentPrice - state.discountAmount)
+        .clamp(0.0, double.infinity);
+
+    final params = ConfirmBookingParams(
+      userId: user.id,
+      facilityId: facilityId,
+      courtId: courtId,
+      courtName: courtName,
+      courtAddress: courtAddress,
+      courtImage: courtImage,
+      selectedDate: selectedDate,
+      selectedSlot: selectedSlot,
+      totalPrice: finalPrice,
+      equipment: equipments,
+      voucherCode: state.isVoucherApplied ? state.voucherCode : null,
+      discountAmount: state.discountAmount,
+      paymentMethod: state.selectedPaymentMethod.name,
+    );
+
+    final result = await useCase.execute(params);
+
+    state = state.copyWith(isProcessing: false);
+
+    result.fold(
+      (failure) => throw failure,
+      (_) {
+        // Invalidate existing bookings to refresh lists
+        ref.invalidate(bookingProvider);
+
+        // Normalize date to ensure we invalidate the correct provider key
+        final normalizedDate =
+            DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+
+        ref.invalidate(
+          bookedSlotsProvider(
+            courtId: courtId,
+            date: normalizedDate,
+          ),
+        );
+      },
+    );
   }
 }
 

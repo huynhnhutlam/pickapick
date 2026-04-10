@@ -1,18 +1,40 @@
-import 'dart:developer' as developer;
-
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../domain/entities/booked_court.dart';
 import '../../domain/entities/equipment.dart';
+import '../../domain/usecases/cancel_booking_use_case.dart';
+import '../../domain/usecases/confirm_booking_use_case.dart';
+import '../../domain/usecases/get_bookings_use_case.dart';
+import '../../domain/usecases/watch_bookings_use_case.dart';
 import 'court_providers.dart';
 
 part 'booking_providers.g.dart';
 
 @riverpod
+ConfirmBookingUseCase confirmBookingUseCase(ConfirmBookingUseCaseRef ref) {
+  return ConfirmBookingUseCase(ref.watch(courtRepositoryProvider));
+}
+
+@riverpod
+CancelBookingUseCase cancelBookingUseCase(CancelBookingUseCaseRef ref) {
+  return CancelBookingUseCase(ref.watch(courtRepositoryProvider));
+}
+
+@riverpod
+GetBookingsUseCase getBookingsUseCase(GetBookingsUseCaseRef ref) {
+  return GetBookingsUseCase(ref.watch(courtRepositoryProvider));
+}
+
+@riverpod
+WatchBookingsUseCase watchBookingsUseCase(WatchBookingsUseCaseRef ref) {
+  return WatchBookingsUseCase(ref.watch(courtRepositoryProvider));
+}
+
+@riverpod
 class Booking extends _$Booking {
-  RealtimeChannel? _channel;
+  StreamSubscription? _subscription;
 
   @override
   FutureOr<List<BookedCourt>> build() async {
@@ -20,85 +42,32 @@ class Booking extends _$Booking {
     if (user == null) return [];
 
     ref.onDispose(() {
-      _channel?.unsubscribe();
+      _subscription?.cancel();
     });
 
-    _setupRealtime(user);
-    return _fetchBookings(user);
+    _setupRealtime(user.id);
+
+    final result = await ref.watch(getBookingsUseCaseProvider).execute(user.id);
+    return result.fold(
+      (failure) => throw failure,
+      (bookings) => bookings,
+    );
   }
 
-  void _setupRealtime(User user) {
-    final client = Supabase.instance.client;
-    _channel = client
-        .channel('public:bookings')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all,
-          schema: 'public',
-          table: 'bookings',
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: 'user_id',
-            value: user.id,
-          ),
-          callback: (payload) => ref.invalidateSelf(),
-        )
-        .subscribe();
-  }
-
-  Future<List<BookedCourt>> _fetchBookings(User user) async {
-    final repository = ref.read(courtRepositoryProvider);
-    try {
-      return await repository.getBookings(user.id);
-    } catch (e, s) {
-      developer.log('Fetch bookings failed', error: e, stackTrace: s);
-      rethrow;
-    }
-  }
-
-  Future<void> addBooking({
-    required BookedCourt newBooking,
-    required String facilityId,
-    required String courtId,
-    required List<Equipment> equipment,
-    required String? voucherCode,
-    required double discountAmount,
-    required String paymentMethod,
-  }) async {
-    final userFuture = ref.read(authNotifierProvider.future);
-    final repository = ref.read(courtRepositoryProvider);
-    try {
-      final user = await userFuture;
-
-      if (user == null) {
-        throw Exception('Vui lòng đăng nhập để đặt sân');
-      }
-      await repository.addBooking(
-        userId: user.id,
-        booking: newBooking,
-        facilityId: facilityId,
-        courtId: courtId,
-        equipment: equipment,
-        voucherCode: voucherCode,
-        discountAmount: discountAmount,
-        paymentMethod: paymentMethod,
-      );
-
-      ref.invalidateSelf();
-    } catch (e, s) {
-      developer.log('Add booking failed', error: e, stackTrace: s);
-      rethrow;
-    }
+  void _setupRealtime(String userId) {
+    _subscription = ref
+        .read(watchBookingsUseCaseProvider)
+        .execute(userId)
+        .listen((_) => ref.invalidateSelf());
   }
 
   Future<void> cancelBooking(String bookingId) async {
-    final repository = ref.read(courtRepositoryProvider);
-    try {
-      await repository.cancelBooking(bookingId);
-      ref.invalidateSelf();
-    } catch (e, s) {
-      developer.log('Cancel booking failed', error: e, stackTrace: s);
-      rethrow;
-    }
+    final result =
+        await ref.read(cancelBookingUseCaseProvider).execute(bookingId);
+    result.fold(
+      (failure) => throw failure,
+      (_) => ref.invalidateSelf(),
+    );
   }
 }
 
