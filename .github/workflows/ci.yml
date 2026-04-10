@@ -2,63 +2,113 @@ name: Flutter CI/CD
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ '**' ]           # Chạy trên mọi branch khi có commit
   pull_request:
     branches: [ main, master, develop ]
     types: [opened, synchronize, reopened]
 
 jobs:
-  # 1. Lint & Static Analysis
-  linter:
-    name: Lint & Analysis
+  # ──────────────────────────────────────────────────────────────────────────
+  # 0. Quick Check — chạy trên MỌI commit, mọi branch
+  #    Mục tiêu: phát hiện lỗi sớm ngay sau khi push
+  # ──────────────────────────────────────────────────────────────────────────
+  quick-check:
+    name: Quick Check (Analyze & Generate)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.41.x' # Keep it consistent with project
-          channel: 'stable'
-          cache: true
-          
-      - name: Install dependencies
-        run: flutter pub get
-        
-      - name: Check formatting
-        run: dart format --output=none --set-exit-if-changed .
 
-      - name: Run code generation
-        run: dart run build_runner build --delete-conflicting-outputs
-        
-      - name: Static analysis
-        run: flutter analyze
-
-  # 2. Unit & Widget tests
-  tests:
-    name: Run Tests
-    needs: linter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
-          
+
       - name: Install dependencies
         run: flutter pub get
-        
+
       - name: Run code generation
         run: dart run build_runner build --delete-conflicting-outputs
-        
+
+      - name: Check for uncommitted generated files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "❌ Generated files are out of date. Run build_runner and commit the results."
+            git diff --stat
+            exit 1
+          fi
+          echo "✅ All generated files are up to date."
+
+      - name: Static analysis
+        run: flutter analyze --fatal-infos
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # 1. Lint & Static Analysis — chỉ chạy trên main/master/develop & PRs
+  # ──────────────────────────────────────────────────────────────────────────
+  linter:
+    name: Lint & Analysis
+    needs: quick-check
+    if: |
+      github.ref == 'refs/heads/main' ||
+      github.ref == 'refs/heads/master' ||
+      github.ref == 'refs/heads/develop' ||
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Static analysis
+        run: flutter analyze
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # 2. Unit & Widget tests
+  # ──────────────────────────────────────────────────────────────────────────
+  tests:
+    name: Run Tests
+    needs: linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
       - name: Run unit tests
         run: flutter test
 
+  # ──────────────────────────────────────────────────────────────────────────
   # 3. Build Android (APK & App Bundle)
+  # ──────────────────────────────────────────────────────────────────────────
   build-android:
     name: Build Android
     needs: tests
@@ -66,45 +116,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-          
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
-          
+
       - name: Install dependencies
         run: flutter pub get
-        
+
       - name: Run code generation
         run: dart run build_runner build --delete-conflicting-outputs
-        
+
       - name: Build APK (Release)
         run: flutter build apk --release
-        
+
       - name: Build App Bundle (Release)
         run: flutter build appbundle --release
-        
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          
+
       - name: Upload App Bundle
         uses: actions/upload-artifact@v4
         with:
           name: android-aab
           path: build/app/outputs/bundle/release/app-release.aab
 
-  # 4. Build iOS (IPA validation or build)
+  # ──────────────────────────────────────────────────────────────────────────
+  # 4. Build iOS
+  # ──────────────────────────────────────────────────────────────────────────
   build-ios:
     name: Build iOS
     needs: tests
@@ -112,33 +164,35 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
-          
+
       - name: Install dependencies
         run: flutter pub get
-        
+
       - name: Run code generation
         run: dart run build_runner build --delete-conflicting-outputs
-        
+
       - name: Build iOS (no-codesign)
         run: flutter build ios --release --no-codesign
-        
+
       - name: Zip iOS Build
         run: zip -r ios_build.zip build/ios/iphoneos
-        
+
       - name: Upload iOS Build
         uses: actions/upload-artifact@v4
         with:
           name: ios-build
           path: ios_build.zip
 
+  # ──────────────────────────────────────────────────────────────────────────
   # 5. Build Web
+  # ──────────────────────────────────────────────────────────────────────────
   build-web:
     name: Build Web
     needs: tests
@@ -146,23 +200,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
-          
+
       - name: Install dependencies
         run: flutter pub get
-        
+
       - name: Run code generation
         run: dart run build_runner build --delete-conflicting-outputs
-        
+
       - name: Build Web
         run: flutter build web --release
-        
+
       - name: Upload Web Build
         uses: actions/upload-artifact@v4
         with:

@@ -1,9 +1,10 @@
 import 'dart:developer' as developer;
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../domain/entities/booked_court.dart';
 import '../../domain/entities/court.dart';
+import '../../domain/entities/equipment.dart';
 import '../../domain/entities/sub_court.dart';
 import '../../domain/repositories/court_repository.dart';
 
@@ -81,14 +82,100 @@ class SupabaseCourtRepository implements CourtRepository {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getRentalServices() async {
+  @override
+  Future<void> addBooking({
+    required String userId,
+    required BookedCourt booking,
+    required String facilityId,
+    required String courtId,
+    required List<Equipment> equipment,
+    required String? voucherCode,
+    required double discountAmount,
+    required String paymentMethod,
+  }) async {
+    try {
+      final parts = booking.slot.split(' - ');
+      final startTime = '${parts[0]}:00';
+      final endTime = '${parts[1]}:00';
+
+      final startH = int.parse(parts[0].substring(0, 2));
+      final endH = int.parse(parts[1].substring(0, 2));
+      final duration = endH - startH;
+
+      final equipmentDetails = equipment
+          .map(
+            (e) => {
+              'id': e.id,
+              'name': e.name,
+              'price_per_unit': e.pricePerUnit,
+              'quantity': e.quantity,
+            },
+          )
+          .toList();
+
+      await _client.from('bookings').insert({
+        'user_id': userId,
+        'facility_id': facilityId,
+        'court_id': courtId,
+        'booking_date': booking.date.toIso8601String().split('T').first,
+        'start_time': startTime,
+        'end_time': endTime,
+        'duration_hours': duration,
+        'total_price': booking.price,
+        'status': 'confirmed',
+        'payment_status': 'paid',
+        'equipment_details': equipmentDetails,
+        'voucher_code': voucherCode,
+        'discount_amount': discountAmount,
+        'payment_method': paymentMethod,
+      });
+    } catch (e, s) {
+      developer.log(
+        'Failed to add booking',
+        name: 'CourtRepository',
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<BookedCourt>> getBookings(String userId) async {
+    try {
+      await syncBookingStatuses();
+
+      final response = await _client
+          .from('bookings')
+          .select('*, facilities:facility_id(*), courts:court_id(*)')
+          .eq('user_id', userId)
+          .order('booking_date', ascending: false);
+
+      return (response as List)
+          .map((json) => BookedCourt.fromSupabase(json as Map<String, dynamic>))
+          .toList();
+    } catch (e, s) {
+      developer.log(
+        'Failed to fetch bookings',
+        name: 'CourtRepository',
+        error: e,
+        stackTrace: s,
+      );
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<Equipment>> getRentalServices() async {
     try {
       final response = await _client
           .from('rental_services')
           .select()
           .eq('is_active', true)
           .order('name');
-      return (response as List).cast<Map<String, dynamic>>();
+      return (response as List)
+          .map((json) => Equipment.fromJson(json as Map<String, dynamic>))
+          .toList();
     } catch (e, s) {
       developer.log(
         'Failed to fetch rental services',
@@ -130,13 +217,13 @@ class SupabaseCourtRepository implements CourtRepository {
   Future<List<String>> getBookedSlots(String courtId, DateTime date) async {
     try {
       final dateStr = date.toIso8601String().split('T').first;
-      final response = await _client
-          .from('bookings')
-          .select('start_time, duration_hours')
-          .eq('court_id', courtId)
-          .eq('booking_date', dateStr)
-          .neq('status', 'cancelled');
-
+      final response = await _client.rpc(
+        'get_booked_slots',
+        params: {
+          'p_court_id': courtId,
+          'p_date': dateStr,
+        },
+      );
       final List<String> allBookedSlots = [];
       for (final row in (response as List)) {
         final startTimeStr = row['start_time'] as String;
@@ -188,37 +275,3 @@ class SupabaseCourtRepository implements CourtRepository {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Providers
-// ---------------------------------------------------------------------------
-
-final courtRepositoryProvider = Provider<SupabaseCourtRepository>(
-  (ref) => SupabaseCourtRepository(Supabase.instance.client),
-);
-
-final featuredCourtsProvider = FutureProvider<List<Court>>(
-  (ref) => ref.watch(courtRepositoryProvider).getFeaturedCourts(),
-);
-
-final allCourtsProvider = FutureProvider<List<Court>>(
-  (ref) => ref.watch(courtRepositoryProvider).getCourts(),
-);
-
-final bookedSlotsProvider =
-    FutureProvider.family<List<String>, ({String courtId, DateTime date})>(
-  (ref, args) => ref
-      .watch(courtRepositoryProvider)
-      .getBookedSlots(args.courtId, args.date),
-);
-
-final courtDetailsProvider = FutureProvider.family<Court, String>(
-  (ref, id) => ref.watch(courtRepositoryProvider).getCourtDetails(id),
-);
-
-final subCourtsProvider = FutureProvider.family<List<SubCourt>, String>(
-  (ref, id) => ref.watch(courtRepositoryProvider).getSubCourts(id),
-);
-
-final rentalServicesProvider = FutureProvider<List<Map<String, dynamic>>>(
-  (ref) => ref.watch(courtRepositoryProvider).getRentalServices(),
-);

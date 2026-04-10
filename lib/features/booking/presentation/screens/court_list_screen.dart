@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
+import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 
 import '../providers/courts_notifier.dart';
 
@@ -20,7 +22,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   String _searchQuery = '';
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
-
+  final AnalyticsService _analyticsService =
+      AnalyticsService(FirebaseAnalytics.instance);
   @override
   void dispose() {
     _searchController.dispose();
@@ -171,6 +174,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                   ),
                                 ),
                                 onPressed: () {
+                                  _analyticsService.logDetailCourt(
+                                    courtId: court.id,
+                                    courtName: court.name,
+                                  );
                                   context.router.push(
                                     CourtDetailRoute(courtId: court.id),
                                   );

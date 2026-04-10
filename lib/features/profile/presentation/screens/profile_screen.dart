@@ -229,8 +229,11 @@ class ProfileScreen extends ConsumerWidget {
                 color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(AppSizes.r12),
               ),
-              child: Icon(icon,
-                  size: AppSizes.iconLarge, color: theme.primaryColor),
+              child: Icon(
+                icon,
+                size: AppSizes.iconLarge,
+                color: theme.primaryColor,
+              ),
             ),
             const SizedBox(width: AppSizes.p16),
             Expanded(

@@ -124,3 +124,10 @@ app.*.map.json
 .augment
 .claude
 .commandcode
+.agent
+.skillsrc
+CLAUDE.md
+AGENTS.md
+.github/instructions
+.github/skills
+.github/prompts

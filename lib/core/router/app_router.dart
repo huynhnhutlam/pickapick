@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Screens
 import 'package:pickle_pick/features/auth/presentation/screens/login_screen.dart';
 import 'package:pickle_pick/features/auth/presentation/screens/register_screen.dart';
-import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
+import 'package:pickle_pick/features/booking/domain/entities/booked_court.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_detail_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_history_screen.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_summary_screen.dart';

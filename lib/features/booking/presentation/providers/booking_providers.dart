@@ -1,81 +1,35 @@
 import 'dart:developer' as developer;
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../../core/enum/enum.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../domain/entities/booked_court.dart';
+import '../../domain/entities/equipment.dart';
+import 'court_providers.dart';
 
-class BookedCourt {
-  final String id;
-  final String courtName;
-  final String courtAddress;
-  final String courtImage;
-  final DateTime date;
-  final String slot;
-  final double price;
-  final BookingStatus status;
+part 'booking_providers.g.dart';
 
-  BookedCourt({
-    required this.id,
-    required this.courtName,
-    required this.courtAddress,
-    required this.courtImage,
-    required this.date,
-    required this.slot,
-    required this.price,
-    this.status = BookingStatus.upcoming,
-  });
-
-  factory BookedCourt.fromJson(Map<String, dynamic> json) {
-    // Assuming a join with facilities: facilities!inner(...)
-    final f = json['facilities'] as Map<String, dynamic>?;
-    final c = json['courts'] as Map<String, dynamic>?;
-    final images = (f?['images'] as List?)?.cast<String>() ?? [];
-    final startTime = (json['start_time'] as String).substring(0, 5);
-    final duration = (json['duration_hours'] as num?)?.toInt() ?? 1;
-
-    final startH = int.parse(startTime.substring(0, 2));
-    final endH = startH + duration;
-    final endTime = '${endH.toString().padLeft(2, '0')}:00';
-
-    final facilityName = f?['name'] as String? ?? 'Sân Pickleball';
-    final courtName = c?['name'] as String?;
-    final fullName =
-        courtName != null ? '$facilityName - $courtName' : facilityName;
-
-    return BookedCourt(
-      id: json['id'] as String,
-      courtName: fullName,
-      courtAddress: f?['address'] as String? ?? '',
-      courtImage: images.isNotEmpty
-          ? images.first
-          : 'https://picsum.photos/seed/${json['id']}/400/300',
-      date: DateTime.parse(json['booking_date'] as String),
-      slot: '$startTime - $endTime',
-      price: (json['total_price'] as num).toDouble(),
-      status: BookingStatus.fromDb(json['status'] as String?),
-    );
-  }
-}
-
-class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
+@riverpod
+class Booking extends _$Booking {
   RealtimeChannel? _channel;
 
-  BookingNotifier(this._client, this._user) : super(const AsyncLoading()) {
-    _fetchBookings();
-    if (_user != null) {
-      _setupRealtime();
-    }
+  @override
+  FutureOr<List<BookedCourt>> build() async {
+    final user = ref.watch(authNotifierProvider).valueOrNull;
+    if (user == null) return [];
+
+    ref.onDispose(() {
+      _channel?.unsubscribe();
+    });
+
+    _setupRealtime(user);
+    return _fetchBookings(user);
   }
 
-  final SupabaseClient _client;
-  final User? _user;
-
-  void _setupRealtime() {
-    if (_user == null) return;
-
-    _channel = _client
+  void _setupRealtime(User user) {
+    final client = Supabase.instance.client;
+    _channel = client
         .channel('public:bookings')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
@@ -84,76 +38,52 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
             column: 'user_id',
-            value: _user.id,
+            value: user.id,
           ),
-          callback: (payload) {
-            _fetchBookings();
-          },
+          callback: (payload) => ref.invalidateSelf(),
         )
         .subscribe();
   }
 
-  @override
-  void dispose() {
-    _channel?.unsubscribe();
-    super.dispose();
-  }
-
-  Future<void> _fetchBookings() async {
-    if (_user == null) {
-      state = const AsyncData([]);
-      return;
-    }
+  Future<List<BookedCourt>> _fetchBookings(User user) async {
+    final repository = ref.read(courtRepositoryProvider);
     try {
-      // Automatically update status of bookings that have already passed
-      await _client.rpc('update_booking_statuses');
-
-      final response = await _client
-          .from('bookings')
-          .select('*, facilities:facility_id(*), courts:court_id(*)')
-          .eq('user_id', _user.id)
-          .order('booking_date', ascending: false);
-
-      final bookings = (response as List)
-          .map((json) => BookedCourt.fromJson(json as Map<String, dynamic>))
-          .toList();
-      if (mounted) state = AsyncData(bookings);
+      return await repository.getBookings(user.id);
     } catch (e, s) {
-      if (mounted) state = AsyncError(e, s);
       developer.log('Fetch bookings failed', error: e, stackTrace: s);
+      rethrow;
     }
   }
 
-  Future<void> addBooking(
-    BookedCourt newBooking,
-    String facilityId,
-    String courtId,
-  ) async {
-    if (_user == null) return;
-
+  Future<void> addBooking({
+    required BookedCourt newBooking,
+    required String facilityId,
+    required String courtId,
+    required List<Equipment> equipment,
+    required String? voucherCode,
+    required double discountAmount,
+    required String paymentMethod,
+  }) async {
+    final userFuture = ref.read(authNotifierProvider.future);
+    final repository = ref.read(courtRepositoryProvider);
     try {
-      // Parse slot range "HH:mm - HH:mm"
-      final parts = newBooking.slot.split(' - ');
-      final startTime = '${parts[0]}:00';
-      final endTime = '${parts[1]}:00';
+      final user = await userFuture;
 
-      final startH = int.parse(parts[0].substring(0, 2));
-      final endH = int.parse(parts[1].substring(0, 2));
-      final duration = endH - startH;
+      if (user == null) {
+        throw Exception('Vui lòng đăng nhập để đặt sân');
+      }
+      await repository.addBooking(
+        userId: user.id,
+        booking: newBooking,
+        facilityId: facilityId,
+        courtId: courtId,
+        equipment: equipment,
+        voucherCode: voucherCode,
+        discountAmount: discountAmount,
+        paymentMethod: paymentMethod,
+      );
 
-      await _client.from('bookings').insert({
-        'user_id': _user.id,
-        'facility_id': facilityId,
-        'court_id': courtId,
-        'booking_date': newBooking.date.toIso8601String().split('T').first,
-        'start_time': startTime,
-        'end_time': endTime,
-        'duration_hours': duration,
-        'total_price': newBooking.price,
-        'status': 'confirmed',
-        'payment_status': 'unpaid',
-      });
-      await _fetchBookings();
+      ref.invalidateSelf();
     } catch (e, s) {
       developer.log('Add booking failed', error: e, stackTrace: s);
       rethrow;
@@ -161,11 +91,10 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
   }
 
   Future<void> cancelBooking(String bookingId) async {
+    final repository = ref.read(courtRepositoryProvider);
     try {
-      await _client
-          .from('bookings')
-          .update({'status': 'cancelled'}).eq('id', bookingId);
-      await _fetchBookings();
+      await repository.cancelBooking(bookingId);
+      ref.invalidateSelf();
     } catch (e, s) {
       developer.log('Cancel booking failed', error: e, stackTrace: s);
       rethrow;
@@ -173,9 +102,50 @@ class BookingNotifier extends StateNotifier<AsyncValue<List<BookedCourt>>> {
   }
 }
 
-final bookingProvider =
-    StateNotifierProvider<BookingNotifier, AsyncValue<List<BookedCourt>>>(
-        (ref) {
-  final user = ref.watch(authNotifierProvider).valueOrNull;
-  return BookingNotifier(Supabase.instance.client, user);
-});
+@riverpod
+class EquipmentSelection extends _$EquipmentSelection {
+  @override
+  FutureOr<List<Equipment>> build() async {
+    final data = await ref.watch(rentalServicesProvider.future);
+
+    return data
+        .map(
+          (e) => e.copyWith(quantity: 0),
+        )
+        .toList();
+  }
+
+  void increment(String id) {
+    state.whenData((list) {
+      state = AsyncData([
+        for (final item in list)
+          if (item.id == id)
+            item.copyWith(quantity: item.quantity + 1)
+          else
+            item,
+      ]);
+    });
+  }
+
+  void decrement(String id) {
+    state.whenData((list) {
+      state = AsyncData([
+        for (final item in list)
+          if (item.id == id && item.quantity > 0)
+            item.copyWith(quantity: item.quantity - 1)
+          else
+            item,
+      ]);
+    });
+  }
+
+  List<Equipment> get selectedEquipments =>
+      state.valueOrNull?.where((e) => e.quantity > 0).toList() ?? [];
+
+  double get totalPrice =>
+      state.valueOrNull?.fold(
+        0.0,
+        (sum, item) => sum! + (item.pricePerUnit * item.quantity),
+      ) ??
+      0.0;
+}

@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
-import 'package:pickle_pick/features/booking/data/repositories/court_repository_impl.dart';
 import 'package:pickle_pick/features/booking/domain/entities/sub_court.dart';
+import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 
@@ -129,7 +129,8 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
     final bookedSlotsAsync = _selectedSubCourtId != null
         ? ref.watch(
             bookedSlotsProvider(
-              (courtId: _selectedSubCourtId!, date: _selectedDate),
+              courtId: _selectedSubCourtId!,
+              date: _selectedDate,
             ),
           )
         : const AsyncValue<List<String>>.data([]);
@@ -158,7 +159,8 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
               if (_selectedSubCourtId != null) {
                 ref.invalidate(
                   bookedSlotsProvider(
-                    (courtId: _selectedSubCourtId!, date: _selectedDate),
+                    courtId: _selectedSubCourtId!,
+                    date: _selectedDate,
                   ),
                 );
               }

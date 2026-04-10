@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/router/app_router.dart';
@@ -42,7 +43,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.read(authNotifierProvider);
     authState.whenOrNull(
       data: (user) {
-        if (user != null) context.router.replaceAll([const MainWrapperRoute()]);
+        if (user != null) {
+          if (widget.onResult != null) {
+            widget.onResult?.call(true);
+          } else {
+            ref.read(analyticsProvider).logLogin();
+            context.router.replaceAll([const MainWrapperRoute()]);
+          }
+        }
       },
       error: (e, _) {
         final msg = e is AuthException ? e.message : AppStrings.msgLoginFailed;

@@ -140,7 +140,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                       label: cat['name'] as String,
                       isSelected: _selectedCategoryId == cat['id'],
                       onTap: () => setState(
-                          () => _selectedCategoryId = cat['id'] as String?),
+                        () => _selectedCategoryId = cat['id'] as String?,
+                      ),
                     );
                   },
                 ),

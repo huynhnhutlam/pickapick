@@ -8,6 +8,7 @@ import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../core/enum/enum.dart';
+import '../../domain/entities/booked_court.dart';
 import '../providers/booking_providers.dart';
 
 @RoutePage()
@@ -203,7 +204,7 @@ class BookingDetailScreen extends StatelessWidget {
 /// Extracted cancel confirmation dialog to keep the main screen widget slim.
 class _CancelDialog extends StatelessWidget {
   final String bookingId;
-  final BookingNotifier notifier;
+  final Booking notifier;
 
   const _CancelDialog({required this.bookingId, required this.notifier});
 

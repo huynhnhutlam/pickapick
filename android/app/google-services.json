@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197461520997",
+    "project_id": "pickapick-2747d",
+    "storage_bucket": "pickapick-2747d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197461520997:android:912852aa85a7b30ca70c8c",
+        "android_client_info": {
+          "package_name": "com.picklepick.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlY7aTHozZP2DtqAR8nlb8-GK9prBV744"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

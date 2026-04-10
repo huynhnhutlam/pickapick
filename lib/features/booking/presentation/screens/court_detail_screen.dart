@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
-import 'package:pickle_pick/features/booking/data/repositories/court_repository_impl.dart';
 import 'package:pickle_pick/features/booking/domain/entities/court.dart';
+import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 
@@ -241,8 +241,11 @@ class _RatingBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star,
-              color: Colors.amber, size: AppSizes.iconMedium),
+          const Icon(
+            Icons.star,
+            color: Colors.amber,
+            size: AppSizes.iconMedium,
+          ),
           const SizedBox(width: AppSizes.p4),
           Text(
             rating.toStringAsFixed(1),

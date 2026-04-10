@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
-import 'package:pickle_pick/features/booking/data/repositories/court_repository_impl.dart';
+import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:pickle_pick/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 import 'package:pickle_pick/shared/widgets/item_cards.dart';
