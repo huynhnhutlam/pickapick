@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pickle_pick/core/extension/string_extension.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/booked_court.dart';
 import '../../domain/entities/equipment.dart';
@@ -68,15 +69,10 @@ class ConfirmBookingUseCase {
             return false;
           }
 
-          int toMinutes(String time) {
-            final parts = time.split(':');
-            return int.parse(parts[0]) * 60 + int.parse(parts[1]);
-          }
-
-          final eStart = toMinutes(existingParts[0]);
-          final eEnd = toMinutes(existingParts[1]);
-          final sStart = toMinutes(selectedParts[0]);
-          final sEnd = toMinutes(selectedParts[1]);
+          final eStart = existingParts[0].toMinutes();
+          final eEnd = existingParts[1].toMinutes();
+          final sStart = selectedParts[0].toMinutes();
+          final sEnd = selectedParts[1].toMinutes();
 
           // Standard overlap formula: (start1 < end2) && (start2 < end1)
           return (sStart < eEnd) && (eStart < sEnd);
