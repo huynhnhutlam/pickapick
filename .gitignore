@@ -133,3 +133,6 @@ AGENTS.md
 .github/instructions
 .github/skills
 .github/prompts
+
+# Firebase
+/lib/core/services/firebase_services/firebase_options.dart
