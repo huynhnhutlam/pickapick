@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'court.freezed.dart';
-part 'court.g.dart';
 
 @freezed
 class Court with _$Court {
@@ -18,8 +17,6 @@ class Court with _$Court {
     required List<String> rules,
     required String openingHours,
   }) = _Court;
-
-  factory Court.fromJson(Map<String, dynamic> json) => _$CourtFromJson(json);
 }
 
 @freezed
@@ -30,7 +27,4 @@ class CourtSlot with _$CourtSlot {
     required bool isAvailable,
     double? priceOverride,
   }) = _CourtSlot;
-
-  factory CourtSlot.fromJson(Map<String, dynamic> json) =>
-      _$CourtSlotFromJson(json);
 }

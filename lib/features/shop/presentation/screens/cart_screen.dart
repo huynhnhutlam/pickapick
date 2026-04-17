@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 
@@ -35,22 +36,25 @@ class CartScreen extends ConsumerWidget {
                   children: [
                     const Icon(
                       Icons.shopping_cart_outlined,
-                      size: 80,
+                      size: AppSizes.iconHero,
                       color: Colors.white12,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSizes.p20),
                     const Text(
                       'Giỏ hàng trống',
-                      style: TextStyle(fontSize: 18, color: Colors.white38),
+                      style: TextStyle(
+                        fontSize: AppSizes.titleLarge,
+                        color: Colors.white38,
+                      ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSizes.p32),
                     SizedBox(
                       width: 200,
                       child: NeonButton(
                         label: 'MUA SẮM NGAY',
                         color: theme.primaryColor,
                         onPressed: () => context.router.popUntilRoot(),
-                        radius: 30,
+                        radius: AppSizes.r30,
                       ),
                     ),
                   ],
@@ -60,34 +64,36 @@ class CartScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: ListView.separated(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(AppSizes.p20),
                       itemCount: data.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: AppSizes.p16),
                       itemBuilder: (context, index) {
                         final item = data[index];
                         final price =
                             item.product.salePrice ?? item.product.price;
 
                         return Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(AppSizes.p12),
                           decoration: BoxDecoration(
                             color: theme.cardColor,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppSizes.r16),
                           ),
                           child: Row(
                             children: [
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius:
+                                    BorderRadius.circular(AppSizes.r12),
                                 child: Image.network(
                                   item.product.images.isNotEmpty
                                       ? item.product.images[0]
-                                      : 'https://picsum.photos/100', // Safefallback
-                                  height: 80,
-                                  width: 80,
+                                      : 'https://picsum.photos/100',
+                                  height: AppSizes.cartItemSize,
+                                  width: AppSizes.cartItemSize,
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => Container(
-                                    height: 80,
-                                    width: 80,
+                                    height: AppSizes.cartItemSize,
+                                    width: AppSizes.cartItemSize,
                                     color: Colors.grey[800],
                                     child: const Icon(
                                       Icons.image,
@@ -96,7 +102,7 @@ class CartScreen extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              const SizedBox(width: AppSizes.p16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,11 +115,12 @@ class CartScreen extends ConsumerWidget {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: AppSizes.p4),
                                     Text(
                                       price.toVND(),
-                                      style:
-                                          TextStyle(color: theme.primaryColor),
+                                      style: TextStyle(
+                                        color: theme.primaryColor,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -123,7 +130,7 @@ class CartScreen extends ConsumerWidget {
                                   IconButton(
                                     icon: const Icon(
                                       Icons.add_circle_outline,
-                                      size: 20,
+                                      size: AppSizes.iconLarge,
                                     ),
                                     onPressed: () =>
                                         cartNotifier.updateQuantity(
@@ -140,7 +147,7 @@ class CartScreen extends ConsumerWidget {
                                   IconButton(
                                     icon: const Icon(
                                       Icons.remove_circle_outline,
-                                      size: 20,
+                                      size: AppSizes.iconLarge,
                                     ),
                                     onPressed: () =>
                                         cartNotifier.updateQuantity(
@@ -157,13 +164,14 @@ class CartScreen extends ConsumerWidget {
                     ),
                   ),
 
-                  // Summary Footer
+                  // ─── Summary Footer ──────────────────────────────────
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(AppSizes.p24),
                     decoration: BoxDecoration(
                       color: theme.cardColor,
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(30)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(AppSizes.r30),
+                      ),
                     ),
                     child: Column(
                       children: [
@@ -173,21 +181,21 @@ class CartScreen extends ConsumerWidget {
                             const Text(
                               'Tổng cộng',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: AppSizes.bodyLarge,
                                 color: Colors.white54,
                               ),
                             ),
                             Text(
                               cartNotifier.totalAmount.toVND(),
                               style: theme.textTheme.titleLarge?.copyWith(
-                                fontSize: 24,
+                                fontSize: AppSizes.h3,
                                 fontWeight: FontWeight.bold,
                                 color: theme.primaryColor,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: AppSizes.p24),
                         Row(
                           children: [
                             const Text(
@@ -197,12 +205,13 @@ class CartScreen extends ConsumerWidget {
                             const Spacer(),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
+                                horizontal: AppSizes.p12,
+                                vertical: AppSizes.p4 + 2,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.blue.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius:
+                                    BorderRadius.circular(AppSizes.r12),
                                 border: Border.all(
                                   color: Colors.blue.withValues(alpha: 0.3),
                                 ),
@@ -211,14 +220,14 @@ class CartScreen extends ConsumerWidget {
                                 children: [
                                   Icon(
                                     Icons.wallet,
-                                    size: 16,
+                                    size: AppSizes.bodyLarge,
                                     color: Colors.blue,
                                   ),
-                                  SizedBox(width: 6),
+                                  SizedBox(width: AppSizes.p4 + 2),
                                   Text(
                                     'PicklePay',
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: AppSizes.labelSmall,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -227,14 +236,13 @@ class CartScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSizes.p20),
                         NeonButton(
                           label: 'THANH TOÁN',
                           color: theme.primaryColor,
                           onPressed: () async {
                             if (cartNotifier.totalAmount == 0) return;
 
-                            // Show processing dialog
                             showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -243,10 +251,12 @@ class CartScreen extends ConsumerWidget {
                                 elevation: 0,
                                 child: Center(
                                   child: Container(
-                                    padding: const EdgeInsets.all(24),
+                                    padding: const EdgeInsets.all(AppSizes.p24),
                                     decoration: BoxDecoration(
                                       color: theme.cardColor,
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSizes.r16,
+                                      ),
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -254,7 +264,7 @@ class CartScreen extends ConsumerWidget {
                                         CircularProgressIndicator(
                                           color: theme.primaryColor,
                                         ),
-                                        const SizedBox(height: 16),
+                                        const SizedBox(height: AppSizes.p16),
                                         const Text(
                                           'Đang xử lý thanh toán...',
                                           style: TextStyle(
@@ -268,10 +278,12 @@ class CartScreen extends ConsumerWidget {
                               ),
                             );
 
-                            await Future.delayed(const Duration(seconds: 2));
+                            await Future.delayed(
+                              const Duration(seconds: 2),
+                            );
 
                             if (context.mounted) {
-                              Navigator.of(context).pop(); // pop processing
+                              Navigator.of(context).pop();
 
                               try {
                                 await ref
@@ -280,7 +292,6 @@ class CartScreen extends ConsumerWidget {
                                       data,
                                       cartNotifier.totalAmount,
                                     );
-                                // Also tell cart notifier to refresh so it properly reflects empty state
                                 await cartNotifier.fetchCart();
                               } catch (e) {
                                 if (context.mounted) {
@@ -299,32 +310,35 @@ class CartScreen extends ConsumerWidget {
                                   builder: (context) => AlertDialog(
                                     backgroundColor: theme.cardColor,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(24),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSizes.r24,
+                                      ),
                                     ),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         const Icon(
                                           Icons.check_circle,
-                                          size: 80,
+                                          size: AppSizes.iconHero,
                                           color: Colors.greenAccent,
                                         ),
-                                        const SizedBox(height: 24),
+                                        const SizedBox(height: AppSizes.p24),
                                         const Text(
                                           'Thanh toán thành công!',
                                           style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: AppSizes.h5,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: AppSizes.p12),
                                         const Text(
                                           'Đơn hàng của bạn đã được ghi nhận.',
                                           textAlign: TextAlign.center,
-                                          style:
-                                              TextStyle(color: Colors.white54),
+                                          style: TextStyle(
+                                            color: Colors.white54,
+                                          ),
                                         ),
-                                        const SizedBox(height: 32),
+                                        const SizedBox(height: AppSizes.p32),
                                         SizedBox(
                                           width: double.infinity,
                                           child: NeonButton(
@@ -334,7 +348,7 @@ class CartScreen extends ConsumerWidget {
                                               Navigator.of(context).pop();
                                               context.router.popUntilRoot();
                                             },
-                                            radius: 12,
+                                            radius: AppSizes.r12,
                                           ),
                                         ),
                                       ],
@@ -344,7 +358,7 @@ class CartScreen extends ConsumerWidget {
                               }
                             }
                           },
-                          radius: 16,
+                          radius: AppSizes.r16,
                         ),
                       ],
                     ),

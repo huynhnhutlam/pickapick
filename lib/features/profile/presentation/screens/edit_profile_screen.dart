@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 
 @RoutePage()
@@ -91,19 +92,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         title: const Text('Chỉnh sửa thông tin'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.p24),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ─── Avatar Picker ─────────────────────────────────────────
               Center(
                 child: GestureDetector(
                   onTap: _pickImage,
                   child: Stack(
                     children: [
                       CircleAvatar(
-                        radius: 50,
+                        radius: AppSizes.avatarRadius,
                         backgroundColor: Colors.white10,
                         backgroundImage: _pickedImage != null
                             ? null
@@ -112,21 +114,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 : null),
                         child: _pickedImage != null
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.avatarRadius,
+                                ),
                                 child: Image.network(
-                                  // This is actually bad, should use local file but for demo...
-                                  // Actually use Image.file if not web.
-                                  // I'll keep it simple: just show an icon if it's new for now.
-                                  // Or even better, use the bytes.
                                   '',
-                                  errorBuilder: (context, e, s) =>
-                                      const Icon(Icons.check, size: 40),
+                                  errorBuilder: (context, e, s) => const Icon(
+                                    Icons.check,
+                                    size: AppSizes.iconXL,
+                                  ),
                                 ),
                               )
                             : (avatarUrl == null
                                 ? const Icon(
                                     Icons.person,
-                                    size: 50,
+                                    size: AppSizes.avatarRadius,
                                     color: Colors.white38,
                                   )
                                 : null),
@@ -135,14 +137,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         bottom: 0,
                         right: 0,
                         child: Container(
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(AppSizes.p4),
                           decoration: BoxDecoration(
                             color: theme.primaryColor,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
                             Icons.camera_alt,
-                            size: 18,
+                            size: AppSizes.iconMedium,
                             color: Colors.black,
                           ),
                         ),
@@ -151,12 +153,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+
+              const SizedBox(height: AppSizes.p32),
+
+              // ─── Full Name Field ───────────────────────────────────────
               const Text(
                 'Tên hiển thị',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppSizes.bodySmall,
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.p8),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
@@ -165,19 +173,25 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   filled: true,
                   fillColor: theme.cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSizes.r16),
                     borderSide: BorderSide.none,
                   ),
                 ),
                 validator: (val) =>
                     val == null || val.isEmpty ? 'Hãy nhập tên' : null,
               ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: AppSizes.p20),
+
+              // ─── Phone Field ───────────────────────────────────────────
               const Text(
                 'Số điện thoại',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppSizes.bodySmall,
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.p8),
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
@@ -187,7 +201,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   filled: true,
                   fillColor: theme.cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSizes.r16),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -195,15 +209,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     ? 'Hãy nhập số điện thoại'
                     : null,
               ),
-              const SizedBox(height: 40),
+
+              const SizedBox(height: AppSizes.p40),
+
+              // ─── Save Button ───────────────────────────────────────────
               SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: AppSizes.buttonHeight,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _updateProfile,
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSizes.r16),
                     ),
                   ),
                   child: _isLoading
