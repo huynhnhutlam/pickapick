@@ -106,6 +106,7 @@ Future<List<String>> bookedSlots(
     (slots) => slots,
   );
 }
+
 @riverpod
 Future<List<String>> availableSlots(
   Ref ref, {
