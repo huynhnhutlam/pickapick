@@ -177,6 +177,143 @@ class SupabaseCourtRepository implements CourtRepository {
   }
 
   @override
+  Future<Either<Failure, List<String>>> getAvailableSlots(
+    String courtId,
+    DateTime date,
+  ) async {
+    return _handleRequest(() async {
+      // Handle both DOW (0-6) and ISODOW (1-7) gracefully
+      final dartWeekday = date.weekday;
+
+      developer.log(
+        'Fetching available slots for court: $courtId on date: $date (weekday: $dartWeekday)',
+        name: 'CourtRepositoryImpl',
+      );
+
+      final response = await _client
+          .from('courts')
+          .select('*, facilities(open_time, close_time), court_schedules(*)')
+          .eq('id', courtId)
+          .single();
+
+      developer.log(
+        'API Response for courts: $response',
+        name: 'CourtRepositoryImpl',
+      );
+
+      final facility = response['facilities'] as Map<String, dynamic>?;
+      final schedules = response['court_schedules'] as List?;
+
+      String openTimeStr = facility?['open_time']?.toString() ?? '06:00:00';
+      String closeTimeStr = facility?['close_time']?.toString() ?? '22:00:00';
+
+      // Fallback: try to get slot_duration_minutes from courts or facilities before defaulting to 60
+      final defaultDurationRaw = response['slot_duration_minutes'] ??
+          facility?['slot_duration_minutes'];
+      int duration = 60;
+      if (defaultDurationRaw != null) {
+        duration = defaultDurationRaw is int
+            ? defaultDurationRaw
+            : (int.tryParse(defaultDurationRaw.toString()) ?? 60);
+      }
+
+      // Find the specific schedule for this day safely
+      Map<String, dynamic>? scheduleForDay;
+      try {
+        if (schedules != null) {
+          for (final item in schedules) {
+            final converted = item is Map<String, dynamic>
+                ? item
+                : Map<String, dynamic>.from(item as Map);
+
+            final dbDay = converted['day_of_week'] is int
+                ? converted['day_of_week']
+                : int.tryParse(converted['day_of_week']?.toString() ?? '');
+
+            // Accommodate missing is_active flag or true/1
+            final isActive = converted['is_active'] == null ||
+                converted['is_active'] == true ||
+                converted['is_active'] == 1;
+
+            // Match if dbDay is 1-7 matching date.weekday or 0-6 matching date.weekday%7
+            if (dbDay != null &&
+                (dbDay == dartWeekday ||
+                    dbDay == dartWeekday % 7 ||
+                    (dartWeekday == 7 && dbDay == 0)) &&
+                isActive) {
+              scheduleForDay = converted;
+              break;
+            }
+          }
+        }
+      } catch (e) {
+        developer.log(
+          'Error parsing schedules: $e',
+          name: 'CourtRepositoryImpl',
+        );
+      }
+
+      if (scheduleForDay != null && scheduleForDay.isNotEmpty) {
+        developer.log(
+          'Found specific schedule: $scheduleForDay',
+          name: 'CourtRepositoryImpl',
+        );
+        // Handle various possible column names for times
+        openTimeStr = scheduleForDay['open_time']?.toString() ??
+            scheduleForDay['start_time']?.toString() ??
+            openTimeStr;
+        closeTimeStr = scheduleForDay['close_time']?.toString() ??
+            scheduleForDay['end_time']?.toString() ??
+            closeTimeStr;
+
+        final durationRaw = scheduleForDay['slot_duration_minutes'] ??
+            scheduleForDay['session_duration'];
+
+        if (durationRaw != null) {
+          duration = durationRaw is int
+              ? durationRaw
+              : (int.tryParse(durationRaw.toString()) ?? 60);
+        }
+      }
+
+      developer.log(
+        'Using openTime: $openTimeStr, closeTime: $closeTimeStr, duration: $duration',
+        name: 'CourtRepositoryImpl',
+      );
+
+      // Generate slots
+      final slots = <String>[];
+      final start = _parseTime(openTimeStr);
+      final end = _parseTime(closeTimeStr);
+
+      var current = start;
+      while (current.isBefore(end)) {
+        final next = current.add(Duration(minutes: duration));
+        if (next.isAfter(end)) {
+          // If the last slot exceeds closing time, we can either truncate it to closing time or just skip it.
+          // Let's truncate to closing time:
+          slots.add('${_formatTime(current)} - ${_formatTime(end)}');
+        } else {
+          slots.add('${_formatTime(current)} - ${_formatTime(next)}');
+        }
+        current = next;
+      }
+
+      developer.log('Generated slots: $slots', name: 'CourtRepositoryImpl');
+      return slots;
+    });
+  }
+
+  DateTime _parseTime(String timeStr) {
+    final parts = timeStr.split(':');
+    return DateTime(2000, 1, 1, int.parse(parts[0]), int.parse(parts[1]));
+  }
+
+  String _formatTime(DateTime dt) {
+    return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  }
+
+  @override
   Stream<void> watchBookings(String userId) {
     final controller = StreamController<void>();
     RealtimeChannel? channel;

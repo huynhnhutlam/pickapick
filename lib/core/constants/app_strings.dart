@@ -96,6 +96,7 @@ class AppStrings {
   static const String courtSearchHint = 'Tìm kiếm sân...';
   static const String noCourtFound = 'Không tìm thấy sân nào.';
   static const String courtListDetails = 'Chi tiết';
+  static const String orderNow = 'Đặt ngay';
   static const String perHour = '/giờ';
 
   // ─── Booking – Slot Picker ────────────────────────────────────────────────

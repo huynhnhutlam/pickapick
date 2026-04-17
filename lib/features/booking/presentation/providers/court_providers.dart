@@ -7,6 +7,7 @@ import '../../domain/entities/court.dart';
 import '../../domain/entities/equipment.dart';
 import '../../domain/entities/sub_court.dart';
 import '../../domain/repositories/court_repository.dart';
+import '../../domain/usecases/get_available_slots_use_case.dart';
 import '../../domain/usecases/get_booked_slots_use_case.dart';
 import '../../domain/usecases/get_court_details_use_case.dart';
 import '../../domain/usecases/get_courts_use_case.dart';
@@ -43,6 +44,11 @@ GetRentalServicesUseCase getRentalServicesUseCase(Ref ref) {
 @riverpod
 GetBookedSlotsUseCase getBookedSlotsUseCase(Ref ref) {
   return GetBookedSlotsUseCase(ref.watch(courtRepositoryProvider));
+}
+
+@riverpod
+GetAvailableSlotsUseCase getAvailableSlotsUseCase(Ref ref) {
+  return GetAvailableSlotsUseCase(ref.watch(courtRepositoryProvider));
 }
 
 @riverpod
@@ -95,6 +101,19 @@ Future<List<String>> bookedSlots(
 }) async {
   final result =
       await ref.watch(getBookedSlotsUseCaseProvider).execute(courtId, date);
+  return result.fold(
+    (failure) => throw failure,
+    (slots) => slots,
+  );
+}
+@riverpod
+Future<List<String>> availableSlots(
+  Ref ref, {
+  required String courtId,
+  required DateTime date,
+}) async {
+  final result =
+      await ref.watch(getAvailableSlotsUseCaseProvider).execute(courtId, date);
   return result.fold(
     (failure) => throw failure,
     (slots) => slots,

@@ -27,5 +27,9 @@ abstract class CourtRepository {
     String courtId,
     DateTime date,
   );
+  Future<Either<Failure, List<String>>> getAvailableSlots(
+    String courtId,
+    DateTime date,
+  );
   Stream<void> watchBookings(String userId);
 }

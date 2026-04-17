@@ -89,107 +89,122 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 symbol: 'đ',
               ).format(court.pricePerHour);
 
-              return Card(
-                margin: const EdgeInsets.only(bottom: AppSizes.p16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppSizes.r20),
-                        ),
-                        child: Image.network(
-                          court.images.isNotEmpty
-                              ? court.images.first
-                              : 'https://picsum.photos/400/300',
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            color: Colors.grey[800],
-                            child: const Icon(
-                              Icons.image,
-                              color: Colors.white24,
+              return GestureDetector(
+                onTap: () {
+                  _analyticsService.logDetailCourt(
+                    courtId: court.id,
+                    courtName: court.name,
+                  );
+                  context.router.push(
+                    CourtDetailRoute(courtId: court.id),
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.only(bottom: AppSizes.p16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppSizes.r20),
+                          ),
+                          child: Image.network(
+                            court.images.isNotEmpty
+                                ? court.images.first
+                                : 'https://picsum.photos/400/300',
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              color: Colors.grey[800],
+                              child: const Icon(
+                                Icons.image,
+                                color: Colors.white24,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(AppSizes.p16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  court.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                    size: AppSizes.iconLarge,
-                                  ),
-                                  const SizedBox(width: AppSizes.p4),
-                                  Text(court.rating.toStringAsFixed(1)),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSizes.p8),
-                          Text(
-                            court.address,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: AppSizes.p12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '$priceFormatted${AppStrings.perHour}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppSizes.bodyLarge,
-                                  color: Colors.greenAccent,
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: AppSizes.p24,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(AppSizes.r12),
+                      Padding(
+                        padding: const EdgeInsets.all(AppSizes.p16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    court.name,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                onPressed: () {
-                                  _analyticsService.logDetailCourt(
-                                    courtId: court.id,
-                                    courtName: court.name,
-                                  );
-                                  context.router.push(
-                                    CourtDetailRoute(courtId: court.id),
-                                  );
-                                },
-                                child: const Text(AppStrings.courtListDetails),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                      size: AppSizes.iconLarge,
+                                    ),
+                                    const SizedBox(width: AppSizes.p4),
+                                    Text(court.rating.toStringAsFixed(1)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSizes.p8),
+                            Text(
+                              court.address,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppSizes.p12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '$priceFormatted${AppStrings.perHour}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: AppSizes.bodyLarge,
+                                    color: Colors.greenAccent,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSizes.p24,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(AppSizes.r12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    context.router.push(
+                                      SlotPickerRoute(
+                                        courtId: court.id,
+                                        courtName: court.name,
+                                        courtAddress: court.address,
+                                        courtImage: court.images.isNotEmpty
+                                            ? court.images.first
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(AppStrings.orderNow),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

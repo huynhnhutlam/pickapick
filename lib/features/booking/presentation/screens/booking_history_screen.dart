@@ -126,6 +126,25 @@ class BookingHistoryScreen extends ConsumerWidget {
                                   fontSize: AppSizes.labelMedium,
                                 ),
                               ),
+                              const SizedBox(height: AppSizes.p4),
+                              if (booking.createdAt != null)
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.access_time_rounded,
+                                      size: 11,
+                                      color: Colors.white24,
+                                    ),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      'Đặt lúc ${DateFormat('HH:mm dd/MM/yyyy').format(booking.createdAt!.toLocal())}',
+                                      style: const TextStyle(
+                                        color: Colors.white24,
+                                        fontSize: AppSizes.labelTiny,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               const SizedBox(height: AppSizes.p8),
                               Container(
                                 padding: const EdgeInsets.symmetric(

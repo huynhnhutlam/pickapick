@@ -19,6 +19,8 @@ class BookedCourtModel {
     final fullName =
         courtName != null ? '$facilityName - $courtName' : facilityName;
 
+    final createdAtRaw = json['created_at'] as String?;
+
     return BookedCourt(
       id: json['id'] as String,
       courtName: fullName,
@@ -30,6 +32,7 @@ class BookedCourtModel {
       slot: '$startTime - $endTime',
       price: (json['total_price'] as num).toDouble(),
       status: BookingStatus.fromDb(json['status'] as String?),
+      createdAt: createdAtRaw != null ? DateTime.parse(createdAtRaw) : null,
     );
   }
 

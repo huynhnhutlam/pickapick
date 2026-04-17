@@ -573,8 +573,15 @@ class _BottomBookingBar extends StatelessWidget {
           Expanded(
             child: NeonButton(
               label: AppStrings.btnContinue,
-              onPressed: () =>
-                  context.router.push(SlotPickerRoute(courtId: court.id)),
+              onPressed: () => context.router.push(
+                SlotPickerRoute(
+                  courtId: court.id,
+                  courtName: court.name,
+                  courtAddress: court.address,
+                  courtImage:
+                      court.images.isNotEmpty ? court.images.first : null,
+                ),
+              ),
             ),
           ),
         ],

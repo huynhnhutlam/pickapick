@@ -14,5 +14,6 @@ class BookedCourt with _$BookedCourt {
     required String slot,
     required double price,
     @Default(BookingStatus.upcoming) BookingStatus status,
+    DateTime? createdAt,
   }) = _BookedCourt;
 }
