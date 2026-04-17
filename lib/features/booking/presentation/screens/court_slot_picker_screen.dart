@@ -155,9 +155,11 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(courtDetailsAsync.value?.name ??
-            widget.courtName ??
-            AppStrings.selectTime),
+        title: Text(
+          courtDetailsAsync.value?.name ??
+              widget.courtName ??
+              AppStrings.selectTime,
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.router.maybePop(),
