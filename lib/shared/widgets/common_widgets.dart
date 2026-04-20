@@ -23,12 +23,19 @@ class NeonButton extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
-            color: primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
+            color: primary.withValues(alpha: 0.4),
+            blurRadius: 15,
+            spreadRadius: -2,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: primary.withValues(alpha: 0.2),
+            blurRadius: 30,
+            spreadRadius: -5,
+            offset: const Offset(0, 15),
           ),
         ],
       ),
