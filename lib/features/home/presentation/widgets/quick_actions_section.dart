@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 
 class QuickActionsSection extends StatelessWidget {
@@ -24,6 +25,7 @@ class QuickActionsSection extends StatelessWidget {
             children: QuickActionType.values
                 .map(
                   (action) => _QuickAction(
+                    key: WidgetKeys.quickActionItem(action.name),
                     action: action,
                     onTap: () {
                       switch (action) {
@@ -58,6 +60,7 @@ class _QuickAction extends StatelessWidget {
   final VoidCallback onTap;
 
   const _QuickAction({
+    required super.key,
     required this.action,
     required this.onTap,
   });

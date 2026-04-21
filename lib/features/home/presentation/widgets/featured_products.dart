@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
@@ -20,6 +21,7 @@ class FeaturedProducts extends ConsumerWidget {
     return Column(
       children: [
         SectionHeader(
+          key: WidgetKeys.featuredProductsSeeAll,
           title: AppStrings.sectionNewProducts,
           actionLabel: AppStrings.shopNow,
           onAction: () => context.router.push(const ShopRoute()),
@@ -41,6 +43,7 @@ class FeaturedProducts extends ConsumerWidget {
                     horizontalOffset: 50.0,
                     child: FadeInAnimation(
                       child: ProductCard(
+                        key: WidgetKeys.featuredProductItem(products[index].id),
                         product: products[index],
                         onTap: () => context.router.push(
                           ProductDetailsRoute(product: products[index]),

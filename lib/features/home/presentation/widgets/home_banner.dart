@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -45,11 +46,13 @@ class _HomeBannerState extends ConsumerState<HomeBanner> {
             if (banners.isEmpty) return const SizedBox.shrink();
 
             return PageView.builder(
+              key: WidgetKeys.homeBannerPageView,
               controller: _pageController,
               itemCount: banners.length,
               itemBuilder: (context, index) {
                 final banner = banners[index];
                 return Padding(
+                  key: WidgetKeys.homeBannerItem(index),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(AppSizes.r24),
@@ -104,6 +107,7 @@ class _HomeBannerState extends ConsumerState<HomeBanner> {
                               SizedBox(
                                 height: 38,
                                 child: NeonButton(
+                                  key: WidgetKeys.bannerActionButton(index),
                                   label: banner.actionTitle ??
                                       AppStrings.bannerAction,
                                   onPressed: () {
