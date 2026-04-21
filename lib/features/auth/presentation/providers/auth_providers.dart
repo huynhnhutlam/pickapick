@@ -102,3 +102,11 @@ class AuthNotifier extends AsyncNotifier<User?> {
 
 final authNotifierProvider =
     AsyncNotifierProvider<AuthNotifier, User?>(AuthNotifier.new);
+
+/// Provides the user's profile data.
+final userProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+  final authNotifier = ref.watch(authNotifierProvider.notifier);
+  final user = ref.watch(authNotifierProvider).value;
+  if (user == null) return null;
+  return authNotifier.getProfile();
+});
