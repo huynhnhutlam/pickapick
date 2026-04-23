@@ -147,6 +147,7 @@ class AppStrings {
   static const String courtInfoSection = 'Thông tin sân';
   static const String paymentSection = 'Thanh toán';
   static const String labelCourtName = 'Tên sân';
+  static const String labelCourtAddress = 'Địa chỉ';
   static const String labelPlayDate = 'Ngày chơi';
   static const String labelPlayTime = 'Giờ chơi';
   static const String labelStatus = 'Trạng thái';

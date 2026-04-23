@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -23,6 +24,7 @@ class BookingDetailScreen extends StatelessWidget {
     final dateFormat = DateFormat('dd/MM/yyyy');
 
     return Scaffold(
+      key: WidgetKeys.bookingDetailScaffold,
       appBar: AppBar(
         title: const Text(AppStrings.bookingDetailTitle),
         leading: IconButton(
@@ -31,6 +33,7 @@ class BookingDetailScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        key: WidgetKeys.bookingDetailBody,
         padding: const EdgeInsets.all(AppSizes.p24),
         child: Column(
           children: [
@@ -62,6 +65,7 @@ class BookingDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppSizes.r20),
                     ),
                     child: QrImageView(
+                      key: WidgetKeys.qrCodeImage,
                       data: booking.id,
                       version: QrVersions.auto,
                       size: AppSizes.qrSize,
@@ -130,6 +134,12 @@ class BookingDetailScreen extends StatelessWidget {
                     label: AppStrings.labelPlayTime,
                     value: booking.slot,
                   ),
+                  const SizedBox(height: AppSizes.p16),
+                  _DetailRow(
+                    icon: Icons.location_city_outlined,
+                    label: AppStrings.labelCourtAddress,
+                    value: booking.courtAddress,
+                  ),
                   const SizedBox(height: AppSizes.p24),
                   const Divider(color: Colors.white10),
                   const SizedBox(height: AppSizes.p24),
@@ -180,6 +190,7 @@ class BookingDetailScreen extends StatelessWidget {
                         ),
                       );
                     },
+                    key: WidgetKeys.cancelBookingButton,
                     icon: const Icon(Icons.cancel_outlined),
                     label: const Text(AppStrings.btnCancelBooking),
                     style: OutlinedButton.styleFrom(
@@ -236,6 +247,7 @@ class _CancelDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
+          key: WidgetKeys.cancelConfirmNo,
           onPressed: () => Navigator.pop(context),
           child: const Text(
             AppStrings.btnNo,
@@ -243,6 +255,7 @@ class _CancelDialog extends StatelessWidget {
           ),
         ),
         TextButton(
+          key: WidgetKeys.cancelConfirmYes,
           onPressed: () async {
             Navigator.pop(context);
             try {

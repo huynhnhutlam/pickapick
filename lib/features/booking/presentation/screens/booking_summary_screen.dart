@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_summary_riverpod.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/widgets/equipment_section.dart';
@@ -47,6 +48,7 @@ class BookingSummaryScreen extends ConsumerWidget {
     final dateStr = DateFormat('dd/MM/yyyy').format(selectedDate);
 
     return Scaffold(
+      key: WidgetKeys.bookingSummaryScaffold,
       appBar: AppBar(
         title: const Text(AppStrings.bookingSummaryTitle),
         leading: IconButton(
@@ -130,6 +132,7 @@ class BookingSummaryScreen extends ConsumerWidget {
                 );
 
                 return NeonButton(
+                  key: WidgetKeys.confirmBookingButton,
                   label: AppStrings.btnConfirmAndPay,
                   isLoading: isProcessing,
                   color: theme.primaryColor,

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
@@ -25,6 +26,7 @@ class BookingHistoryScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      key: WidgetKeys.bookingHistoryScaffold,
       appBar: AppBar(
         title: const Text(AppStrings.bookingHistoryTitle),
         leading: IconButton(
@@ -49,6 +51,7 @@ class BookingHistoryScreen extends ConsumerWidget {
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: const Center(
                     child: Column(
+                      key: WidgetKeys.emptyBookingState,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
@@ -78,6 +81,7 @@ class BookingHistoryScreen extends ConsumerWidget {
                 final booking = data[index];
                 final statusColor = _getStatusColor(booking.status, theme);
                 return GestureDetector(
+                  key: WidgetKeys.bookingHistoryItem(booking.id),
                   onTap: () =>
                       context.router.push(BookingDetailRoute(booking: booking)),
                   child: Container(
@@ -158,6 +162,9 @@ class BookingHistoryScreen extends ConsumerWidget {
                                 ),
                                 child: Text(
                                   booking.status.label.toUpperCase(),
+                                  key: WidgetKeys.bookingHistoryStatus(
+                                    booking.id,
+                                  ),
                                   style: TextStyle(
                                     color: statusColor,
                                     fontSize: AppSizes.labelTiny,
@@ -174,6 +181,7 @@ class BookingHistoryScreen extends ConsumerWidget {
                           children: [
                             Text(
                               booking.price.toVND(),
+                              key: WidgetKeys.bookingHistoryPrice(booking.id),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),

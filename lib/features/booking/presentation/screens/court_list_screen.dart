@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 
@@ -22,8 +22,6 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   String _searchQuery = '';
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
-  final AnalyticsService _analyticsService =
-      AnalyticsService(FirebaseAnalytics.instance);
   @override
   void dispose() {
     _searchController.dispose();
@@ -35,9 +33,11 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     final courtsAsync = ref.watch(courtsProvider);
 
     return Scaffold(
+      key: WidgetKeys.bookingScreenScaffold,
       appBar: AppBar(
         title: _isSearching
             ? TextField(
+                key: WidgetKeys.courtSearchField,
                 controller: _searchController,
                 autofocus: true,
                 decoration: const InputDecoration(
@@ -80,6 +80,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           }
 
           return ListView.builder(
+            key: WidgetKeys.courtList,
             padding: const EdgeInsets.all(AppSizes.p16),
             itemCount: filteredCourts.length,
             itemBuilder: (context, index) {
@@ -90,11 +91,12 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               ).format(court.pricePerHour);
 
               return GestureDetector(
+                key: WidgetKeys.courtListItem(court.id),
                 onTap: () {
-                  _analyticsService.logDetailCourt(
-                    courtId: court.id,
-                    courtName: court.name,
-                  );
+                  ref.read(analyticsProvider).logDetailCourt(
+                        courtId: court.id,
+                        courtName: court.name,
+                      );
                   context.router.push(
                     CourtDetailRoute(courtId: court.id),
                   );
@@ -175,6 +177,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                   ),
                                 ),
                                 ElevatedButton(
+                                  key: WidgetKeys.courtOrderButton(court.id),
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: AppSizes.p24,

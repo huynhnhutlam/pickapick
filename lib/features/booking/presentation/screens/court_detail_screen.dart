@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/domain/entities/court.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
@@ -21,6 +22,7 @@ class CourtDetailScreen extends ConsumerWidget {
     final courtAsync = ref.watch(courtDetailsProvider(courtId));
 
     return Scaffold(
+      key: WidgetKeys.courtDetailScaffold,
       body: courtAsync.when(
         data: (court) => _CourtDetailBody(court: court),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -572,6 +574,7 @@ class _BottomBookingBar extends StatelessWidget {
           const SizedBox(width: AppSizes.p24),
           Expanded(
             child: NeonButton(
+              key: WidgetKeys.bookNowButton,
               label: AppStrings.btnContinue,
               onPressed: () => context.router.push(
                 SlotPickerRoute(

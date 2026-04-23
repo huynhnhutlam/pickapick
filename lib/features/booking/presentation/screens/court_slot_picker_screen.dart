@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/domain/entities/sub_court.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
@@ -154,6 +155,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
     }
 
     return Scaffold(
+      key: WidgetKeys.slotPickerScaffold,
       appBar: AppBar(
         title: Text(
           courtDetailsAsync.value?.name ??
@@ -197,6 +199,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                   final isSelected = DateUtils.isSameDay(_selectedDate, date);
 
                   return GestureDetector(
+                    key: WidgetKeys.dateItem(index),
                     onTap: () {
                       final normalized =
                           DateTime(date.year, date.month, date.day);
@@ -273,6 +276,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                       final isSelected = _selectedSubCourtId == subCourt.id;
 
                       return GestureDetector(
+                        key: WidgetKeys.subCourtItem(subCourt.id),
                         onTap: () {
                           setState(() {
                             _selectedSubCourtId = subCourt.id;
@@ -433,6 +437,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                             isAvailabilityLoading || isBooked || isPast;
 
                         return GestureDetector(
+                          key: WidgetKeys.slotItem(slot),
                           onTap: isDisabled
                               ? null
                               : () => _onSlotTap(
@@ -595,6 +600,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                       ),
                       const SizedBox(height: AppSizes.p24),
                       NeonButton(
+                        key: WidgetKeys.continueToSummaryButton,
                         label: AppStrings.btnConfirmBooking,
                         onPressed: () {
                           if (!_isSelectionContinuous(currentSlots)) {
