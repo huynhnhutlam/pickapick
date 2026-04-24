@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
@@ -28,7 +28,7 @@ class BookingHistoryScreen extends ConsumerWidget {
     return Scaffold(
       key: WidgetKeys.bookingHistoryScaffold,
       appBar: AppBar(
-        title: const Text(AppStrings.bookingHistoryTitle),
+        title: Text(context.l10n.bookingHistory),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.router.maybePop(),
@@ -49,20 +49,20 @@ class BookingHistoryScreen extends ConsumerWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       key: WidgetKeys.emptyBookingState,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.calendar_today_outlined,
                           size: AppSizes.iconXXL,
                           color: Colors.white10,
                         ),
-                        SizedBox(height: AppSizes.p16),
+                        const SizedBox(height: AppSizes.p16),
                         Text(
-                          AppStrings.noBookingsYet,
-                          style: TextStyle(color: Colors.white38),
+                          context.l10n.noBookingsYet,
+                          style: const TextStyle(color: Colors.white38),
                         ),
                       ],
                     ),
@@ -209,11 +209,11 @@ class BookingHistoryScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${AppStrings.errorLoading}$error'),
+              Text(context.l10n.errorLoading(error.toString())),
               const SizedBox(height: AppSizes.p16),
               ElevatedButton(
                 onPressed: () => ref.invalidate(bookingProvider),
-                child: const Text(AppStrings.btnRetry),
+                child: Text(context.l10n.btnRetry),
               ),
             ],
           ),

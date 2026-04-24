@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
@@ -51,7 +52,7 @@ class ProfileScreen extends ConsumerWidget {
                           final user = ref.watch(authNotifierProvider).value;
                           final fullName =
                               user?.userMetadata?['full_name'] as String? ??
-                                  'Khách';
+                                  context.l10n.guest;
                           final email = user?.email ?? '';
 
                           return Column(
@@ -88,9 +89,9 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Hoạt động của tôi',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.myActivities,
+                    style: const TextStyle(
                       fontSize: AppSizes.titleLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -99,10 +100,10 @@ class ProfileScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     icon: Icons.calendar_month,
-                    title: 'Lịch đặt sân',
+                    title: context.l10n.bookings,
                     subtitle: bookingsCount == 0
-                        ? 'Chưa có lịch đặt'
-                        : 'Bạn có $bookingsCount lịch đặt',
+                        ? context.l10n.noBookings
+                        : context.l10n.bookingsCount(bookingsCount),
                     badge: bookingsCount == 0 ? null : bookingsCount.toString(),
                     onTap: () =>
                         context.router.push(const BookingHistoryRoute()),
@@ -111,8 +112,8 @@ class ProfileScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     icon: Icons.shopping_bag_outlined,
-                    title: 'Đơn mua hàng',
-                    subtitle: 'Theo dõi đơn hàng của bạn',
+                    title: context.l10n.orders,
+                    subtitle: context.l10n.ordersSubtitle,
                     onTap: () =>
                         context.router.push(const PurchaseHistoryRoute()),
                   ),
@@ -120,13 +121,13 @@ class ProfileScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     icon: Icons.favorite_border,
-                    title: 'Yêu thích',
-                    subtitle: 'Sân và sản phẩm đã lưu',
+                    title: context.l10n.favorites,
+                    subtitle: context.l10n.favoritesSubtitle,
                   ),
                   const SizedBox(height: AppSizes.p32),
-                  const Text(
-                    'Tài khoản',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.account,
+                    style: const TextStyle(
                       fontSize: AppSizes.titleLarge,
                       fontWeight: FontWeight.bold,
                     ),
@@ -135,28 +136,28 @@ class ProfileScreen extends ConsumerWidget {
                   _buildMenuCard(
                     context,
                     icon: Icons.person_outline,
-                    title: 'Thông tin cá nhân',
-                    subtitle: 'Cập nhật thông tin của bạn',
+                    title: context.l10n.personalInfo,
+                    subtitle: context.l10n.personalInfoSubtitle,
                     onTap: () => context.router.push(const EditProfileRoute()),
                   ),
                   const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.notifications_none,
-                    title: 'Thông báo',
-                    subtitle: 'Cài đặt thông báo',
+                    title: context.l10n.notifications,
+                    subtitle: context.l10n.notificationsSubtitle,
                   ),
                   const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
                     icon: Icons.help_outline,
-                    title: 'Hỗ trợ',
-                    subtitle: 'Liên hệ với chúng tôi',
+                    title: context.l10n.support,
+                    subtitle: context.l10n.supportSubtitle,
                   ),
                   const SizedBox(height: AppSizes.p48),
                   (ref.watch(authNotifierProvider).value != null)
                       ? _buildLogoutButton(
-                          'Đăng xuất',
+                          context.l10n.btnLogout,
                           onPressed: () async {
                             await ref
                                 .read(authNotifierProvider.notifier)
@@ -164,7 +165,7 @@ class ProfileScreen extends ConsumerWidget {
                           },
                         )
                       : _buildLogoutButton(
-                          'Đăng nhập',
+                          context.l10n.login,
                           color: Theme.of(context).colorScheme.primary,
                           onPressed: () {
                             if (context.mounted) {

@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pickle_pick/l10n/app_localizations.dart';
 
 Widget buildTestApp({
   required Widget child,
@@ -23,12 +25,21 @@ Widget buildTestApp({
   return ProviderScope(
     overrides: overrides,
     child: MaterialApp(
-      locale: locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: locale ?? const Locale('en'),
       theme: theme,
       home: content,
     ),
   );
 }
+
+class FakePageRouteInfo extends Fake implements PageRouteInfo {}
 
 extension WidgetTesterX on WidgetTester {
   Future<void> pumpTestApp(

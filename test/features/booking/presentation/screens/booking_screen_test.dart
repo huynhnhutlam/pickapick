@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 import 'package:pickle_pick/features/booking/domain/entities/court.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/court_list_screen.dart';
 
+import '../../../../core/constants/app_strings.dart';
 import '../../../../shared/mocks.dart';
 import '../../../../test_helper.dart';
 import '../robots/booking_robot.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
@@ -40,17 +40,17 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 key: WidgetKeys.courtSearchField,
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: AppStrings.courtSearchHint,
+                decoration: InputDecoration(
+                  hintText: context.l10n.courtSearchHint,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white54),
+                  hintStyle: const TextStyle(color: Colors.white54),
                 ),
                 style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() => _searchQuery = value.toLowerCase());
                 },
               )
-            : const Text(AppStrings.courtListTitle),
+            : Text(context.l10n.courtList),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -76,7 +76,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           }).toList();
 
           if (filteredCourts.isEmpty) {
-            return const Center(child: Text(AppStrings.noCourtFound));
+            return Center(child: Text(context.l10n.noCourtFound));
           }
 
           return ListView.builder(
@@ -169,7 +169,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '$priceFormatted${AppStrings.perHour}',
+                                  '$priceFormatted${context.l10n.perHour}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppSizes.bodyLarge,
@@ -199,7 +199,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                       ),
                                     );
                                   },
-                                  child: const Text(AppStrings.orderNow),
+                                  child: Text(context.l10n.orderNow),
                                 ),
                               ],
                             ),
@@ -215,7 +215,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) =>
-            Center(child: Text('${AppStrings.errorLoading}$err')),
+            Center(child: Text(context.l10n.errorLoading(err.toString()))),
       ),
     );
   }

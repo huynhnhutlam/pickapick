@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 
 import '../../../../core/enum/enum.dart';
@@ -19,7 +20,7 @@ class PurchaseHistoryScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lịch sử mua hàng'),
+        title: Text(context.l10n.purchaseHistory),
       ),
       body: ordersAsync.when(
         data: (orders) {
@@ -34,9 +35,9 @@ class PurchaseHistoryScreen extends ConsumerWidget {
                     color: Colors.white24,
                   ),
                   const SizedBox(height: AppSizes.p16),
-                  const Text(
-                    'Bạn chưa có đơn hàng nào',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.noOrdersYet,
+                    style: const TextStyle(
                       color: Colors.white54,
                       fontSize: AppSizes.bodyLarge,
                     ),
@@ -44,7 +45,7 @@ class PurchaseHistoryScreen extends ConsumerWidget {
                   const SizedBox(height: AppSizes.p24),
                   ElevatedButton(
                     onPressed: () => context.router.back(),
-                    child: const Text('Mua sắm ngay'),
+                    child: Text(context.l10n.btnShopNow),
                   ),
                 ],
               ),
@@ -64,7 +65,7 @@ class PurchaseHistoryScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
-          child: Text('Đã có lỗi xảy ra: $error'),
+          child: Text(context.l10n.errorLoading(error.toString())),
         ),
       ),
     );
@@ -124,7 +125,7 @@ class _OrderCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.p8),
           Text(
-            'Ngày đặt: ${DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)}',
+            context.l10n.labelOrderDate(DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)),
             style: const TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.white54,
@@ -174,7 +175,7 @@ class _OrderCard extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSizes.p4),
                         Text(
-                          'SL: ${item.quantity}',
+                          context.l10n.labelQuantityShort(item.quantity),
                           style: const TextStyle(
                             fontSize: AppSizes.labelMedium,
                             color: Colors.white54,
@@ -196,9 +197,9 @@ class _OrderCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Tổng cộng',
-                style: TextStyle(color: Colors.white54),
+              Text(
+                context.l10n.labelTotal,
+                style: const TextStyle(color: Colors.white54),
               ),
               Text(
                 order.totalAmount.toVND(),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -26,7 +26,7 @@ class BookingDetailScreen extends StatelessWidget {
     return Scaffold(
       key: WidgetKeys.bookingDetailScaffold,
       appBar: AppBar(
-        title: const Text(AppStrings.bookingDetailTitle),
+        title: Text(context.l10n.bookingDetail),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.router.maybePop(),
@@ -49,8 +49,8 @@ class BookingDetailScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    AppStrings.checkInCode,
+                  Text(
+                    context.l10n.checkInCode,
                     style: TextStyle(
                       fontSize: AppSizes.bodyLarge,
                       fontWeight: FontWeight.w600,
@@ -86,8 +86,8 @@ class BookingDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        AppStrings.labelStatus,
+                      Text(
+                        context.l10n.labelStatus,
                         style: TextStyle(color: Colors.white54),
                       ),
                       _StatusBadge(status: booking.status),
@@ -109,8 +109,8 @@ class BookingDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    AppStrings.courtInfoSection,
+                  Text(
+                    context.l10n.courtInfo,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AppSizes.titleLarge,
@@ -119,32 +119,32 @@ class BookingDetailScreen extends StatelessWidget {
                   const SizedBox(height: AppSizes.p20),
                   _DetailRow(
                     icon: Icons.location_on_outlined,
-                    label: AppStrings.labelCourtName,
+                    label: context.l10n.labelCourtName,
                     value: booking.courtName,
                   ),
                   const SizedBox(height: AppSizes.p16),
                   _DetailRow(
                     icon: Icons.calendar_today_outlined,
-                    label: AppStrings.labelPlayDate,
+                    label: context.l10n.labelPlayDate,
                     value: dateFormat.format(booking.date),
                   ),
                   const SizedBox(height: AppSizes.p16),
                   _DetailRow(
                     icon: Icons.access_time,
-                    label: AppStrings.labelPlayTime,
+                    label: context.l10n.labelPlayTime,
                     value: booking.slot,
                   ),
                   const SizedBox(height: AppSizes.p16),
                   _DetailRow(
                     icon: Icons.location_city_outlined,
-                    label: AppStrings.labelCourtAddress,
+                    label: context.l10n.labelCourtAddress,
                     value: booking.courtAddress,
                   ),
                   const SizedBox(height: AppSizes.p24),
                   const Divider(color: Colors.white10),
                   const SizedBox(height: AppSizes.p24),
-                  const Text(
-                    AppStrings.paymentSection,
+                  Text(
+                    context.l10n.paymentInfo,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AppSizes.titleLarge,
@@ -154,8 +154,8 @@ class BookingDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        AppStrings.labelTotalMoney,
+                      Text(
+                        context.l10n.labelTotalMoney,
                         style: TextStyle(color: Colors.white54),
                       ),
                       Text(
@@ -192,7 +192,7 @@ class BookingDetailScreen extends StatelessWidget {
                     },
                     key: WidgetKeys.cancelBookingButton,
                     icon: const Icon(Icons.cancel_outlined),
-                    label: const Text(AppStrings.btnCancelBooking),
+                    label: Text(context.l10n.btnCancelBooking),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.redAccent,
                       side: const BorderSide(color: Colors.redAccent),
@@ -222,22 +222,22 @@ class _CancelDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(AppStrings.cancelBookingTitle),
-      content: const Column(
+      title: Text(context.l10n.cancelBookingTitle),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.cancelBookingContent),
+          Text(context.l10n.cancelBookingContent),
           SizedBox(height: AppSizes.p12),
           Text(
-            AppStrings.cancelPolicy24hBefore,
+            context.l10n.cancelPolicy24hBefore,
             style: TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.greenAccent,
             ),
           ),
           Text(
-            AppStrings.cancelPolicy24hWithin,
+            context.l10n.cancelPolicy24hWithin,
             style: TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.orangeAccent,
@@ -249,8 +249,8 @@ class _CancelDialog extends StatelessWidget {
         TextButton(
           key: WidgetKeys.cancelConfirmNo,
           onPressed: () => Navigator.pop(context),
-          child: const Text(
-            AppStrings.btnNo,
+          child: Text(
+            context.l10n.btnNo,
             style: TextStyle(color: Colors.white54),
           ),
         ),
@@ -263,19 +263,19 @@ class _CancelDialog extends StatelessWidget {
               if (context.mounted) {
                 context.router.back();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(AppStrings.msgCancelSuccess)),
+                  SnackBar(content: Text(context.l10n.msgCancelSuccess)),
                 );
               }
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${AppStrings.errorLoading}$e')),
+                  SnackBar(content: Text(context.l10n.errorLoading(e.toString()))),
                 );
               }
             }
           },
-          child: const Text(
-            AppStrings.btnYes,
+          child: Text(
+            context.l10n.btnYes,
             style: TextStyle(color: Colors.redAccent),
           ),
         ),

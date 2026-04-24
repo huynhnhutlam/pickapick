@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import '../../../../core/constants/app_strings.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
 import 'package:pickle_pick/features/booking/domain/entities/equipment.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';

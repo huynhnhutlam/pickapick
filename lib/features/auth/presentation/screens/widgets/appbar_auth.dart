@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/theme/app_theme.dart';
 
 class Logo extends StatelessWidget {
@@ -19,7 +20,7 @@ class Logo extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Text(
-          'Pickle Pick',
+          context.l10n.appTitle,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,

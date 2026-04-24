@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pickle_pick/features/booking/domain/entities/booked_court.dart';
@@ -15,6 +14,7 @@ import 'package:pickle_pick/features/booking/presentation/screens/booking_detail
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/constants/app_strings.dart';
 import '../../../../shared/mocks.dart';
 import '../../../../test_helper.dart';
 import '../robots/booking_robot.dart';

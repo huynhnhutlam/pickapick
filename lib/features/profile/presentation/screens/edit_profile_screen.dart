@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 
 @RoutePage()
@@ -66,14 +67,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cập nhật thông tin thành công')),
+          SnackBar(content: Text(context.l10n.updateSuccess)),
         );
         context.router.back();
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: $e')),
+          SnackBar(content: Text('${context.l10n.error}: $e')),
         );
       }
     } finally {
@@ -89,7 +90,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chỉnh sửa thông tin'),
+        title: Text(context.l10n.editProfile),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.p24),
@@ -157,9 +158,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               const SizedBox(height: AppSizes.p32),
 
               // ─── Full Name Field ───────────────────────────────────────
-              const Text(
-                'Tên hiển thị',
-                style: TextStyle(
+              Text(
+                context.l10n.displayName,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: AppSizes.bodySmall,
                 ),
@@ -168,7 +169,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  hintText: 'Nhập tên của bạn',
+                  hintText: context.l10n.hintDisplayName,
                   prefixIcon: const Icon(Icons.person_outline),
                   filled: true,
                   fillColor: theme.cardColor,
@@ -178,15 +179,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                 ),
                 validator: (val) =>
-                    val == null || val.isEmpty ? 'Hãy nhập tên' : null,
+                    val == null || val.isEmpty ? context.l10n.valEmptyName : null,
               ),
 
               const SizedBox(height: AppSizes.p20),
 
               // ─── Phone Field ───────────────────────────────────────────
-              const Text(
-                'Số điện thoại',
-                style: TextStyle(
+              Text(
+                context.l10n.labelPhone,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: AppSizes.bodySmall,
                 ),
@@ -196,7 +197,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  hintText: 'Nhập số điện thoại',
+                  hintText: context.l10n.hintPhone,
                   prefixIcon: const Icon(Icons.phone_outlined),
                   filled: true,
                   fillColor: theme.cardColor,
@@ -206,7 +207,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                 ),
                 validator: (val) => val == null || val.isEmpty
-                    ? 'Hãy nhập số điện thoại'
+                    ? context.l10n.valEmptyPhone
                     : null,
               ),
 
@@ -225,9 +226,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator()
-                      : const Text(
-                          'LƯU THAY ĐỔI',
-                          style: TextStyle(
+                      : Text(
+                          context.l10n.btnSaveChanges,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.1,
                           ),

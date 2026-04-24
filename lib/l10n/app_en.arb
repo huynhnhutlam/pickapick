@@ -1,0 +1,236 @@
+{
+  "@@locale": "en",
+  "appTitle": "Pickleball Hub",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "loginTitle": "Welcome\nBack 👋",
+  "loginSubtitle": "Sign in to book courts and shop",
+  "forgotPassword": "Forgot Password?",
+  "btnLogin": "LOGIN",
+  "dontHaveAccount": "Don't have an account? ",
+  "registerNow": "Register now",
+  "msgLoginFailed": "Login failed",
+  "registerTitle": "Create Account 🏓",
+  "registerSubtitle": "Join the Pickleball community today",
+  "labelFullName": "Full Name",
+  "labelPhone": "Phone Number",
+  "labelEmail": "Email",
+  "labelPassword": "Password",
+  "labelConfirmPassword": "Confirm Password",
+  "btnRegister": "REGISTER",
+  "alreadyHaveAccount": "Already have an account? ",
+  "valEmptyName": "Please enter your name",
+  "valEmptyEmail": "Please enter your email",
+  "valInvalidEmail": "Invalid email",
+  "valEmptyPassword": "Please enter your password",
+  "valShortPassword": "Password must be at least 6 characters",
+  "valPasswordMismatch": "Passwords do not match",
+  "valEmptyPhone": "Please enter your phone number",
+  "msgCheckEmail": "Please check your email to confirm your account!",
+  "msgRegisterFailed": "Registration failed",
+
+  "myActivities": "My Activities",
+  "bookings": "Bookings",
+  "noBookings": "No scheduled bookings",
+  "bookingsCount": "You have {count} bookings",
+  "@bookingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "orders": "Orders",
+  "ordersSubtitle": "Track your orders",
+  "favorites": "Favorites",
+  "favoritesSubtitle": "Saved courts and products",
+  "account": "Account",
+  "personalInfo": "Personal Information",
+  "personalInfoSubtitle": "Update your profile",
+  "notifications": "Notifications",
+  "notificationsSubtitle": "Notification settings",
+  "support": "Support",
+  "supportSubtitle": "Contact us",
+  "btnLogout": "Logout",
+  "guest": "Guest",
+
+  "editProfile": "Edit Profile",
+  "displayName": "Display Name",
+  "hintDisplayName": "Enter your name",
+  "hintPhone": "Enter phone number",
+  "btnSaveChanges": "SAVE CHANGES",
+  "updateSuccess": "Update successful",
+  "error": "Error",
+
+  "home": "Home",
+  "shop": "Shop",
+  "profileTab": "Profile",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "greetingWithName": "{greeting}, {name}!",
+  "@greetingWithName": {
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeLocationDefault": "Hanoi City",
+
+  "errorGeneric": "An error occurred",
+  "errorLoading": "Error loading data: {error}",
+  "@errorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "valContinuousTime": "Please select continuous time slots.",
+  "msgVoucherInvalid": "Invalid voucher code.",
+  "msgOrderFailed": "Failed to create order",
+  "selectSubCourtFirst": "Please select a court first",
+  "noCourtFound": "No courts found.",
+  "noBookingsYet": "You don't have any bookings yet",
+  "noProductsFound": "No products found",
+  "cartEmpty": "Your cart is empty",
+  "noOrdersYet": "You don't have any orders yet",
+
+  "bookingHistory": "Booking History",
+  "btnRetry": "Retry",
+  "checkInCode": "Check-in Code",
+  "bookingDetail": "Booking Detail",
+  "labelStatus": "Status",
+  "courtInfo": "Court Information",
+  "labelCourtName": "Court Name",
+  "labelPlayDate": "Play Date",
+  "labelPlayTime": "Play Time",
+  "labelCourtAddress": "Address",
+  "paymentInfo": "Payment",
+  "labelTotalMoney": "Total",
+  "btnCancelBooking": "Cancel Booking",
+  "cancelBookingTitle": "Cancel Booking",
+  "cancelBookingContent": "Are you sure you want to cancel this booking?",
+  "cancelPolicy24hBefore": "• Cancel before 24h: 100% refund to PicklePay wallet.",
+  "cancelPolicy24hWithin": "• Cancel within 24h: 50% cancellation fee.",
+  "btnNo": "NO",
+  "btnYes": "YES",
+  "msgCancelSuccess": "Cancelled successfully",
+
+  "cartTitle": "Cart",
+  "btnShopNow": "SHOP NOW",
+  "labelTotal": "Total",
+  "labelPayment": "Payment:",
+  "btnCheckout": "CHECKOUT",
+  "processingPayment": "Processing payment...",
+  "paymentSuccess": "Payment Success!",
+  "orderConfirmed": "Your order has been confirmed.",
+  "btnContinueShopping": "CONTINUE SHOPPING",
+  "purchaseHistory": "Purchase History",
+  "labelOrderDate": "Order date: {date}",
+  "@labelOrderDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "labelQuantityShort": "Qty: {count}",
+  "@labelQuantityShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopSearchHint": "Search equipment, accessories...",
+  "shopCategoryAll": "All",
+
+  "courtList": "Court List",
+  "courtSearchHint": "Search by name or address...",
+  "perHour": "/hour",
+  "orderNow": "Order Now",
+
+  "selectTime": "Select Time",
+  "noSubCourts": "No sub-courts available.",
+  "selectTimeHint": "Select Time Slot",
+  "statusAvailable": "Available",
+  "statusBooked": "Booked",
+  "statusSelected": "Selected",
+  "noOpeningHours": "No opening hours available for this court.",
+  "totalDuration": "Total Duration",
+  "labelDay": "Day",
+  "btnConfirmBooking": "CONFIRM BOOKING",
+  "hoursShort": "{count}h",
+  "@hoursShort": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+
+  "bookingSummary": "Booking Summary",
+  "bookingDetailSection": "Booking Details",
+  "labelTimeSlot": "Time Slot",
+  "paymentMethodSection": "Payment Method",
+  "btnConfirmAndPay": "CONFIRM & PAY",
+  "msgBookingSuccess": "Booking Successful!",
+  "msgBookingSuccessSubtitle": "Your court has been reserved.",
+  "btnViewBooking": "VIEW BOOKING",
+
+  "equipmentRentalSection": "Equipment Rental",
+  "voucherSection": "Voucher",
+  "voucherHint": "Enter voucher code",
+  "btnApplyVoucher": "APPLY",
+  "msgVoucherSuccess": "Voucher applied successfully!",
+  "paymentInfoSection": "Payment Information",
+  "courtTotalLabel": "Court Price",
+  "equipmentTotalLabel": "Equipment Rental",
+  "labelVoucher": "Voucher ({code})",
+  "@labelVoucher": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "sectionDescription": "Description",
+  "sectionAmenities": "Amenities",
+  "sectionRules": "Rules",
+  "sectionLocation": "Location",
+  "sectionReviews": "Reviews",
+  "startingFrom": "Starting from",
+  "mapUpdating": "Map updating...",
+  "btnContinue": "CONTINUE",
+  "reviewsCount": "Reviews ({count})",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "actionNearby": "Nearby",
+  "actionHotHours": "Hot Hours",
+  "actionVouchers": "Vouchers",
+  "actionVip": "VIP",
+
+  "homeSearchHint": "Search pickleball courts...",
+  "featuredCourtsSection": "Featured Courts",
+  "featuredProductsSection": "Premium Equipment",
+  "seeAll": "See all",
+  "bannerAction": "EXPLORE NOW"
+}

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 
 class HomeSearchBar extends StatelessWidget {
@@ -33,7 +33,7 @@ class HomeSearchBar extends StatelessWidget {
               const Icon(Icons.search, color: Colors.white70),
               const SizedBox(width: AppSizes.p12),
               Text(
-                AppStrings.homeSearchHint,
+                context.l10n.homeSearchHint,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w500,

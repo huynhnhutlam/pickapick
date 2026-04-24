@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/router/app_router.dart';
@@ -57,8 +57,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         } else {
           // Email confirmation required
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(AppStrings.msgCheckEmail),
+            SnackBar(
+              content: Text(context.l10n.msgCheckEmail),
               backgroundColor: Colors.orange,
             ),
           );
@@ -67,7 +67,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       error: (e, _) {
         _logger.severe('Sign up error', e);
         final msg =
-            e is AuthException ? e.message : AppStrings.msgRegisterFailed;
+            e is AuthException ? e.message : context.l10n.msgRegisterFailed;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: Colors.red),
@@ -108,46 +108,46 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const Logo(),
                 const SizedBox(height: AppSizes.p40),
                 Text(
-                  AppStrings.registerTitle,
+                  context.l10n.registerTitle,
                   style: theme.textTheme.displayLarge
                       ?.copyWith(fontSize: AppSizes.h1_5),
                 ),
                 const SizedBox(height: AppSizes.p8),
                 Text(
-                  AppStrings.registerSubtitle,
+                  context.l10n.registerSubtitle,
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: AppSizes.p32),
                 TextFormField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(
-                    labelText: AppStrings.labelFullName,
-                    prefixIcon: Icon(Icons.person_outline),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.labelFullName,
+                    prefixIcon: const Icon(Icons.person_outline),
                   ),
                   validator: (v) =>
-                      (v == null || v.isEmpty) ? AppStrings.valEmptyName : null,
+                      (v == null || v.isEmpty) ? context.l10n.valEmptyName : null,
                 ),
                 const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: AppStrings.labelPhone,
-                    prefixIcon: Icon(Icons.phone_outlined),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.labelPhone,
+                    prefixIcon: const Icon(Icons.phone_outlined),
                   ),
                 ),
                 const SizedBox(height: AppSizes.p16),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: AppStrings.labelEmail,
-                    prefixIcon: Icon(Icons.email_outlined),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.labelEmail,
+                    prefixIcon: const Icon(Icons.email_outlined),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return AppStrings.valEmptyEmail;
-                    if (!v.contains('@')) return AppStrings.valInvalidEmail;
+                    if (v == null || v.isEmpty) return context.l10n.valEmptyEmail;
+                    if (!v.contains('@')) return context.l10n.valInvalidEmail;
                     return null;
                   },
                 ),
@@ -156,7 +156,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    labelText: AppStrings.labelPassword,
+                    labelText: context.l10n.labelPassword,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -171,9 +171,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.isEmpty) {
-                      return AppStrings.valEmptyPassword;
+                      return context.l10n.valEmptyPassword;
                     }
-                    if (v.length < 6) return AppStrings.valShortPassword;
+                    if (v.length < 6) return context.l10n.valShortPassword;
                     return null;
                   },
                 ),
@@ -181,13 +181,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 TextFormField(
                   controller: _confirmController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: AppStrings.labelConfirmPassword,
-                    prefixIcon: Icon(Icons.lock_outline),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.labelConfirmPassword,
+                    prefixIcon: const Icon(Icons.lock_outline),
                   ),
                   validator: (v) {
                     if (v != _passwordController.text) {
-                      return AppStrings.valPasswordMismatch;
+                      return context.l10n.valPasswordMismatch;
                     }
                     return null;
                   },
@@ -197,7 +197,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   width: double.infinity,
                   height: AppSizes.buttonHeight,
                   child: NeonButton(
-                    label: AppStrings.btnRegister,
+                    label: context.l10n.btnRegister,
                     onPressed: _submit,
                     isLoading: isLoading,
                   ),
@@ -207,13 +207,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.alreadyHaveAccount,
+                      context.l10n.alreadyHaveAccount,
                       style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () => context.router.back(),
                       child: Text(
-                        AppStrings.login,
+                        context.l10n.login,
                         style: TextStyle(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,

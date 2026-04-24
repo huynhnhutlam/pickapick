@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
@@ -109,7 +109,7 @@ class _HomeBannerState extends ConsumerState<HomeBanner> {
                                 child: NeonButton(
                                   key: WidgetKeys.bannerActionButton(index),
                                   label: banner.actionTitle ??
-                                      AppStrings.bannerAction,
+                                      context.l10n.bannerAction,
                                   onPressed: () {
                                     if (banner.actionUrl != null &&
                                         banner.actionUrl!.isNotEmpty) {

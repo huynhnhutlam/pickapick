@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 
 /// Robot pattern for booking feature widget tests.
@@ -99,12 +98,12 @@ class BookingRobot {
   }
 
   void expectRetryButtonVisible() {
-    expect(find.text(AppStrings.btnRetry), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
   }
 
   void expectBookingHistoryTitle() {
     expect(
-      find.text(AppStrings.bookingHistoryTitle),
+      find.text('Booking History'),
       findsOneWidget,
     );
   }
@@ -126,7 +125,7 @@ class BookingRobot {
     expect(
       find.descendant(
         of: find.byType(AlertDialog),
-        matching: find.text(AppStrings.cancelBookingTitle),
+        matching: find.text('Cancel Booking'),
       ),
       findsOneWidget,
     );
@@ -136,7 +135,7 @@ class BookingRobot {
 
   void expectBookingDetailTitle() {
     expect(
-      find.text(AppStrings.bookingDetailTitle),
+      find.text('Booking Detail'),
       findsOneWidget,
     );
   }
@@ -216,7 +215,7 @@ class BookingRobot {
   }
 
   Future<void> tapRetry() async {
-    await tester.tap(find.text(AppStrings.btnRetry));
+    await tester.tap(find.text('Retry'));
     await tester.pumpAndSettle();
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/features/booking/domain/entities/equipment.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
@@ -20,9 +20,9 @@ class EquipmentSection extends ConsumerWidget {
         if (equipmentsAsync.isLoading)
           const Center(child: CircularProgressIndicator())
         else if (equipmentsData.isNotEmpty) ...[
-          const Text(
-            AppStrings.equipmentRentalSection,
-            style: TextStyle(
+          Text(
+            context.l10n.equipmentRentalSection,
+            style: const TextStyle(
               fontSize: AppSizes.titleLarge,
               fontWeight: FontWeight.bold,
             ),

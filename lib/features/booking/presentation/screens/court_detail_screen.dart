@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/domain/entities/court.dart';
@@ -27,7 +27,7 @@ class CourtDetailScreen extends ConsumerWidget {
         data: (court) => _CourtDetailBody(court: court),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, __) => Center(
-          child: Text('${AppStrings.errorLoading}$e'),
+          child: Text(context.l10n.errorLoading(e.toString())),
         ),
       ),
       bottomNavigationBar: courtAsync.hasValue
@@ -136,27 +136,27 @@ class _CourtDetailBody extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSizes.p32),
-                const _SectionTitle(title: AppStrings.sectionDescription),
+                _SectionTitle(title: context.l10n.sectionDescription),
                 const SizedBox(height: AppSizes.p12),
                 Text(
                   court.description,
                   style: const TextStyle(color: Colors.white70, height: 1.5),
                 ),
                 const SizedBox(height: AppSizes.p32),
-                const _SectionTitle(title: AppStrings.sectionAmenities),
+                _SectionTitle(title: context.l10n.sectionAmenities),
                 const SizedBox(height: AppSizes.p16),
                 _AmenitiesGrid(amenities: court.amenities),
                 const SizedBox(height: AppSizes.p32),
-                const _SectionTitle(title: AppStrings.sectionRules),
+                _SectionTitle(title: context.l10n.sectionRules),
                 const SizedBox(height: AppSizes.p16),
                 _RulesList(rules: court.rules),
                 const SizedBox(height: AppSizes.p32),
-                const _SectionTitle(title: AppStrings.sectionLocation),
+                _SectionTitle(title: context.l10n.sectionLocation),
                 const SizedBox(height: AppSizes.p16),
                 _MapPlaceholder(),
                 const SizedBox(height: AppSizes.p32),
                 _SectionTitle(
-                  title: '${AppStrings.sectionReviews} (${court.reviewCount})',
+                  title: context.l10n.reviewsCount(court.reviewCount),
                 ),
                 const SizedBox(height: AppSizes.p16),
                 _ReviewsList(courtId: court.id),
@@ -425,9 +425,9 @@ class _MapPlaceholder extends StatelessWidget {
                 color: Colors.black54,
                 borderRadius: BorderRadius.circular(AppSizes.r30),
               ),
-              child: const Text(
-                AppStrings.mapUpdating,
-                style: TextStyle(
+              child: Text(
+                context.l10n.mapUpdating,
+                style: const TextStyle(
                   fontSize: AppSizes.labelSmall,
                   fontWeight: FontWeight.bold,
                 ),
@@ -554,9 +554,9 @@ class _BottomBookingBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                AppStrings.startingFrom,
-                style: TextStyle(
+              Text(
+                context.l10n.startingFrom,
+                style: const TextStyle(
                   color: Colors.white54,
                   fontSize: AppSizes.labelSmall,
                 ),
@@ -575,7 +575,7 @@ class _BottomBookingBar extends StatelessWidget {
           Expanded(
             child: NeonButton(
               key: WidgetKeys.bookNowButton,
-              label: AppStrings.btnContinue,
+              label: context.l10n.btnContinue,
               onPressed: () => context.router.push(
                 SlotPickerRoute(
                   courtId: court.id,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_summary_riverpod.dart';
 
 class VoucherSection extends ConsumerStatefulWidget {
@@ -31,8 +31,8 @@ class _VoucherSectionState extends ConsumerState<VoucherSection> {
       SnackBar(
         content: Text(
           isApplied
-              ? AppStrings.msgVoucherSuccess
-              : AppStrings.msgVoucherInvalid,
+              ? context.l10n.msgVoucherSuccess
+              : context.l10n.msgVoucherInvalid,
         ),
       ),
     );
@@ -45,8 +45,8 @@ class _VoucherSectionState extends ConsumerState<VoucherSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          AppStrings.voucherSection,
+        Text(
+          context.l10n.voucherSection,
           style: TextStyle(
             fontSize: AppSizes.titleLarge,
             fontWeight: FontWeight.bold,
@@ -59,7 +59,7 @@ class _VoucherSectionState extends ConsumerState<VoucherSection> {
               child: TextField(
                 controller: _voucherController,
                 decoration: InputDecoration(
-                  hintText: AppStrings.voucherHint,
+                  hintText: context.l10n.voucherHint,
                   fillColor: theme.cardColor,
                   filled: true,
                   border: OutlineInputBorder(
@@ -79,7 +79,7 @@ class _VoucherSectionState extends ConsumerState<VoucherSection> {
                     borderRadius: BorderRadius.circular(AppSizes.r12),
                   ),
                 ),
-                child: const Text(AppStrings.btnApplyVoucher),
+                child: Text(context.l10n.btnApplyVoucher),
               ),
             ),
           ],

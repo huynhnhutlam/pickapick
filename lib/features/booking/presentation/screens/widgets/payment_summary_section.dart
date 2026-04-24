@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_summary_riverpod.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'booking_price_row.dart';
@@ -37,8 +37,8 @@ class PaymentSummarySection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          AppStrings.paymentInfoSection,
+        Text(
+          context.l10n.paymentInfoSection,
           style: TextStyle(
             fontSize: AppSizes.titleLarge,
             fontWeight: FontWeight.bold,
@@ -46,17 +46,17 @@ class PaymentSummarySection extends ConsumerWidget {
         ),
         const SizedBox(height: AppSizes.p16),
         BookingPriceRow(
-          label: AppStrings.courtTotalLabel,
+          label: context.l10n.courtTotalLabel,
           amount: basePrice,
         ),
         if (equipmentPrice > 0)
           BookingPriceRow(
-            label: AppStrings.equipmentTotalLabel,
+            label: context.l10n.equipmentTotalLabel,
             amount: equipmentPrice,
           ),
         if (isVoucherApplied)
           BookingPriceRow(
-            label: 'Mã giảm giá ($voucherCode)',
+            label: context.l10n.labelVoucher(voucherCode),
             amount: -discountAmount,
             color: Colors.greenAccent,
           ),
@@ -64,9 +64,9 @@ class PaymentSummarySection extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              AppStrings.totalAmount,
-              style: TextStyle(
+            Text(
+              context.l10n.labelTotal,
+              style: const TextStyle(
                 fontSize: AppSizes.bodyLarge,
                 fontWeight: FontWeight.bold,
               ),

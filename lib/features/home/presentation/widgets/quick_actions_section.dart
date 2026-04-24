@@ -89,7 +89,7 @@ class _QuickAction extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.p8),
         Text(
-          action.label,
+          action.getLabel(context),
           style: TextStyle(
             fontSize: AppSizes.labelSmall,
             fontWeight: FontWeight.w600,
