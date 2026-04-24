@@ -125,8 +125,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     labelText: context.l10n.labelFullName,
                     prefixIcon: const Icon(Icons.person_outline),
                   ),
-                  validator: (v) =>
-                      (v == null || v.isEmpty) ? context.l10n.valEmptyName : null,
+                  validator: (v) => (v == null || v.isEmpty)
+                      ? context.l10n.valEmptyName
+                      : null,
                 ),
                 const SizedBox(height: AppSizes.p16),
                 TextFormField(
@@ -146,7 +147,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return context.l10n.valEmptyEmail;
+                    if (v == null || v.isEmpty) {
+                      return context.l10n.valEmptyEmail;
+                    }
                     if (!v.contains('@')) return context.l10n.valInvalidEmail;
                     return null;
                   },

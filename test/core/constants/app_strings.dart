@@ -41,13 +41,17 @@ class AppStrings {
   static const String bookingDetailTitle = 'Booking Detail';
   static const String cancelBookingTitle = 'Cancel Booking';
   static const String totalAmount = 'Total';
-  static const String valContinuousTime = 'Please select continuous time slots.';
+  static const String valContinuousTime =
+      'Please select continuous time slots.';
   static const String noCourtFound = 'No courts found.';
   static const String btnYes = 'YES';
   static const String btnNo = 'NO';
-  static const String cancelBookingContent = 'Are you sure you want to cancel this booking?';
-  static const String cancelPolicy24hBefore = '• Cancel before 24h: 100% refund to PicklePay wallet.';
-  static const String cancelPolicy24hWithin = '• Cancel within 24h: 50% cancellation fee.';
+  static const String cancelBookingContent =
+      'Are you sure you want to cancel this booking?';
+  static const String cancelPolicy24hBefore =
+      '• Cancel before 24h: 100% refund to PicklePay wallet.';
+  static const String cancelPolicy24hWithin =
+      '• Cancel within 24h: 50% cancellation fee.';
   static const String checkInCode = 'Check-in Code';
   static const String labelStatus = 'Status';
   static const String btnApplyVoucher = 'APPLY';

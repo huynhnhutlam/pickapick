@@ -178,8 +178,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                validator: (val) =>
-                    val == null || val.isEmpty ? context.l10n.valEmptyName : null,
+                validator: (val) => val == null || val.isEmpty
+                    ? context.l10n.valEmptyName
+                    : null,
               ),
 
               const SizedBox(height: AppSizes.p20),

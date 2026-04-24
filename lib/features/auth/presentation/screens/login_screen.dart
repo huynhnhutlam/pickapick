@@ -53,7 +53,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       },
       error: (e, _) {
-        final msg = e is AuthException ? e.message : context.l10n.msgLoginFailed;
+        final msg =
+            e is AuthException ? e.message : context.l10n.msgLoginFailed;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: Colors.red),
         );

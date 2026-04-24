@@ -298,7 +298,8 @@ class CartScreen extends ConsumerWidget {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(context.l10n.msgOrderFailed),
+                                      content:
+                                          Text(context.l10n.msgOrderFailed),
                                     ),
                                   );
                                 }
@@ -343,7 +344,8 @@ class CartScreen extends ConsumerWidget {
                                         SizedBox(
                                           width: double.infinity,
                                           child: NeonButton(
-                                            label: context.l10n.btnContinueShopping,
+                                            label: context
+                                                .l10n.btnContinueShopping,
                                             color: theme.primaryColor,
                                             onPressed: () {
                                               Navigator.of(context).pop();

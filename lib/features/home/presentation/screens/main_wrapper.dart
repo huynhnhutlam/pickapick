@@ -25,7 +25,10 @@ class MainWrapperScreen extends StatelessWidget {
           selectedItemColor: Theme.of(context).primaryColor,
           unselectedItemColor: Colors.white.withValues(alpha: 0.6),
           items: [
-            BottomNavigationBarItem(icon: const Icon(Icons.home), label: context.l10n.home),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home),
+              label: context.l10n.home,
+            ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.calendar_today),
               label: context.l10n.bookings,
@@ -34,7 +37,10 @@ class MainWrapperScreen extends StatelessWidget {
               icon: const Icon(Icons.shopping_bag),
               label: context.l10n.shop,
             ),
-            BottomNavigationBarItem(icon: const Icon(Icons.person), label: context.l10n.profileTab),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.person),
+              label: context.l10n.profileTab,
+            ),
           ],
         );
       },

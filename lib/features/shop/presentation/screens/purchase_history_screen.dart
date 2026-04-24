@@ -125,7 +125,9 @@ class _OrderCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSizes.p8),
           Text(
-            context.l10n.labelOrderDate(DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt)),
+            context.l10n.labelOrderDate(
+              DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt),
+            ),
             style: const TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.white54,
