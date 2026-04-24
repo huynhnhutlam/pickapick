@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import '../../../../core/constants/app_strings.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
 import 'package:pickle_pick/features/booking/domain/entities/equipment.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/booking_summary_screen.dart';
 
+import '../../../../core/constants/app_strings.dart';
 import '../../../../shared/mocks.dart';
 import '../../../../test_helper.dart';
 import '../robots/booking_robot.dart';

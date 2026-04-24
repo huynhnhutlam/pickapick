@@ -39,7 +39,7 @@ class PaymentSummarySection extends ConsumerWidget {
       children: [
         Text(
           context.l10n.paymentInfoSection,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: AppSizes.titleLarge,
             fontWeight: FontWeight.bold,
           ),

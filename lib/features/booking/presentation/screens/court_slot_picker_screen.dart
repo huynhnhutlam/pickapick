@@ -383,7 +383,8 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
             child: availableSlotsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, _) => Center(
-                  child: Text(context.l10n.errorLoading(err.toString()))),
+                child: Text(context.l10n.errorLoading(err.toString())),
+              ),
               data: (slots) {
                 if (slots.isEmpty) {
                   return Center(

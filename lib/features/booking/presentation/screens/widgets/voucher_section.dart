@@ -47,7 +47,7 @@ class _VoucherSectionState extends ConsumerState<VoucherSection> {
       children: [
         Text(
           context.l10n.voucherSection,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: AppSizes.titleLarge,
             fontWeight: FontWeight.bold,
           ),

@@ -51,7 +51,7 @@ class BookingDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     context.l10n.checkInCode,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: AppSizes.bodyLarge,
                       fontWeight: FontWeight.w600,
                       color: Colors.white70,
@@ -88,7 +88,7 @@ class BookingDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         context.l10n.labelStatus,
-                        style: TextStyle(color: Colors.white54),
+                        style: const TextStyle(color: Colors.white54),
                       ),
                       _StatusBadge(status: booking.status),
                     ],
@@ -111,7 +111,7 @@ class BookingDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     context.l10n.courtInfo,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AppSizes.titleLarge,
                     ),
@@ -145,7 +145,7 @@ class BookingDetailScreen extends StatelessWidget {
                   const SizedBox(height: AppSizes.p24),
                   Text(
                     context.l10n.paymentInfo,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: AppSizes.titleLarge,
                     ),
@@ -156,7 +156,7 @@ class BookingDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         context.l10n.labelTotalMoney,
-                        style: TextStyle(color: Colors.white54),
+                        style: const TextStyle(color: Colors.white54),
                       ),
                       Text(
                         booking.price.toVND(),
@@ -228,17 +228,17 @@ class _CancelDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(context.l10n.cancelBookingContent),
-          SizedBox(height: AppSizes.p12),
+          const SizedBox(height: AppSizes.p12),
           Text(
             context.l10n.cancelPolicy24hBefore,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.greenAccent,
             ),
           ),
           Text(
             context.l10n.cancelPolicy24hWithin,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: AppSizes.labelSmall,
               color: Colors.orangeAccent,
             ),
@@ -251,7 +251,7 @@ class _CancelDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           child: Text(
             context.l10n.btnNo,
-            style: TextStyle(color: Colors.white54),
+            style: const TextStyle(color: Colors.white54),
           ),
         ),
         TextButton(
@@ -269,14 +269,16 @@ class _CancelDialog extends StatelessWidget {
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.l10n.errorLoading(e.toString()))),
+                  SnackBar(
+                    content: Text(context.l10n.errorLoading(e.toString())),
+                  ),
                 );
               }
             }
           },
           child: Text(
             context.l10n.btnYes,
-            style: TextStyle(color: Colors.redAccent),
+            style: const TextStyle(color: Colors.redAccent),
           ),
         ),
       ],
