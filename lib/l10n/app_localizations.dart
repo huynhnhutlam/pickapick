@@ -1039,6 +1039,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'EXPLORE NOW'**
   String get bannerAction;
+
+  /// No description provided for @featureUnderDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature under development'**
+  String get featureUnderDevelopment;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @languageEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEn;
+
+  /// No description provided for @languageVi.
+  ///
+  /// In en, this message translates to:
+  /// **'Vietnamese'**
+  String get languageVi;
 }
 
 class _AppLocalizationsDelegate

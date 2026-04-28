@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/extensions/context_extension.dart';
+import 'package:pickle_pick/core/providers/locale_provider.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_providers.dart';
@@ -150,6 +151,17 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: AppSizes.p12),
                   _buildMenuCard(
                     context,
+                    icon: Icons.language,
+                    title: context.l10n.language,
+                    subtitle:
+                        ref.watch(localeNotifierProvider).languageCode == 'vi'
+                            ? context.l10n.languageVi
+                            : context.l10n.languageEn,
+                    onTap: () => _showLanguageDialog(context, ref),
+                  ),
+                  const SizedBox(height: AppSizes.p12),
+                  _buildMenuCard(
+                    context,
                     icon: Icons.help_outline,
                     title: context.l10n.support,
                     subtitle: context.l10n.supportSubtitle,
@@ -284,6 +296,47 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final currentLocale = ref.read(localeNotifierProvider).languageCode;
+        return AlertDialog(
+          title: Text(context.l10n.language),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(context.l10n.languageVi),
+                trailing: currentLocale == 'vi'
+                    ? Icon(Icons.check, color: Theme.of(context).primaryColor)
+                    : null,
+                onTap: () {
+                  ref
+                      .read(localeNotifierProvider.notifier)
+                      .setLocale(const Locale('vi'));
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(context.l10n.languageEn),
+                trailing: currentLocale == 'en'
+                    ? Icon(Icons.check, color: Theme.of(context).primaryColor)
+                    : null,
+                onTap: () {
+                  ref
+                      .read(localeNotifierProvider.notifier)
+                      .setLocale(const Locale('en'));
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

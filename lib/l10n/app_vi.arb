@@ -229,5 +229,9 @@
   "featuredCourtsSection": "Sân nổi bật",
   "featuredProductsSection": "Dụng cụ cao cấp",
   "seeAll": "Xem tất cả",
-  "bannerAction": "KHÁM PHÁ NGAY"
+  "bannerAction": "KHÁM PHÁ NGAY",
+  "featureUnderDevelopment": "Tính năng đang phát triển",
+  "language": "Ngôn ngữ",
+  "languageEn": "Tiếng Anh",
+  "languageVi": "Tiếng Việt"
 }

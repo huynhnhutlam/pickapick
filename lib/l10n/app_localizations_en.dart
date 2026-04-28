@@ -498,4 +498,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bannerAction => 'EXPLORE NOW';
+
+  @override
+  String get featureUnderDevelopment => 'Feature under development';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageEn => 'English';
+
+  @override
+  String get languageVi => 'Vietnamese';
 }

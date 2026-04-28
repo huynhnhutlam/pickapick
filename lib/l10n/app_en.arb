@@ -232,5 +232,9 @@
   "featuredCourtsSection": "Featured Courts",
   "featuredProductsSection": "Premium Equipment",
   "seeAll": "See all",
-  "bannerAction": "EXPLORE NOW"
+  "bannerAction": "EXPLORE NOW",
+  "featureUnderDevelopment": "Feature under development",
+  "language": "Language",
+  "languageEn": "English",
+  "languageVi": "Vietnamese"
 }

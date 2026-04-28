@@ -496,4 +496,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get bannerAction => 'KHÁM PHÁ NGAY';
+
+  @override
+  String get featureUnderDevelopment => 'Tính năng đang phát triển';
+
+  @override
+  String get language => 'Ngôn ngữ';
+
+  @override
+  String get languageEn => 'Tiếng Anh';
+
+  @override
+  String get languageVi => 'Tiếng Việt';
 }
