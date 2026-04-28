@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/shop/data/repositories/shop_repository_impl.dart';
@@ -22,8 +22,8 @@ class FeaturedProducts extends ConsumerWidget {
       children: [
         SectionHeader(
           key: WidgetKeys.featuredProductsSeeAll,
-          title: AppStrings.sectionNewProducts,
-          actionLabel: AppStrings.shopNow,
+          title: context.l10n.featuredProductsSection,
+          actionLabel: context.l10n.btnShopNow,
           onAction: () => context.router.push(const ShopRoute()),
         ),
         featuredProducts.when(
@@ -70,7 +70,7 @@ class FeaturedProducts extends ConsumerWidget {
             ),
           ),
           error: (e, s) => Center(
-            child: Text('${AppStrings.errorLoading}$e'),
+            child: Text(context.l10n.errorLoading(e.toString())),
           ),
         ),
       ],

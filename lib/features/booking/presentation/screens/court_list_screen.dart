@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 
@@ -22,8 +22,6 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   String _searchQuery = '';
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
-  final AnalyticsService _analyticsService =
-      AnalyticsService(FirebaseAnalytics.instance);
   @override
   void dispose() {
     _searchController.dispose();
@@ -35,22 +33,24 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     final courtsAsync = ref.watch(courtsProvider);
 
     return Scaffold(
+      key: WidgetKeys.bookingScreenScaffold,
       appBar: AppBar(
         title: _isSearching
             ? TextField(
+                key: WidgetKeys.courtSearchField,
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: AppStrings.courtSearchHint,
+                decoration: InputDecoration(
+                  hintText: context.l10n.courtSearchHint,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white54),
+                  hintStyle: const TextStyle(color: Colors.white54),
                 ),
                 style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() => _searchQuery = value.toLowerCase());
                 },
               )
-            : const Text(AppStrings.courtListTitle),
+            : Text(context.l10n.courtList),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -76,10 +76,11 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           }).toList();
 
           if (filteredCourts.isEmpty) {
-            return const Center(child: Text(AppStrings.noCourtFound));
+            return Center(child: Text(context.l10n.noCourtFound));
           }
 
           return ListView.builder(
+            key: WidgetKeys.courtList,
             padding: const EdgeInsets.all(AppSizes.p16),
             itemCount: filteredCourts.length,
             itemBuilder: (context, index) {
@@ -90,11 +91,12 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               ).format(court.pricePerHour);
 
               return GestureDetector(
+                key: WidgetKeys.courtListItem(court.id),
                 onTap: () {
-                  _analyticsService.logDetailCourt(
-                    courtId: court.id,
-                    courtName: court.name,
-                  );
+                  ref.read(analyticsProvider).logDetailCourt(
+                        courtId: court.id,
+                        courtName: court.name,
+                      );
                   context.router.push(
                     CourtDetailRoute(courtId: court.id),
                   );
@@ -167,7 +169,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '$priceFormatted${AppStrings.perHour}',
+                                  '$priceFormatted${context.l10n.perHour}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppSizes.bodyLarge,
@@ -175,6 +177,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                   ),
                                 ),
                                 ElevatedButton(
+                                  key: WidgetKeys.courtOrderButton(court.id),
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: AppSizes.p24,
@@ -196,7 +199,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                       ),
                                     );
                                   },
-                                  child: const Text(AppStrings.orderNow),
+                                  child: Text(context.l10n.orderNow),
                                 ),
                               ],
                             ),
@@ -212,7 +215,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) =>
-            Center(child: Text('${AppStrings.errorLoading}$err')),
+            Center(child: Text(context.l10n.errorLoading(err.toString()))),
       ),
     );
   }

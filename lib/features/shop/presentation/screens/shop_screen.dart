@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/shop/data/repositories/shop_repository_impl.dart';
 import 'package:pickle_pick/features/shop/presentation/providers/cart_providers.dart';
@@ -35,7 +35,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.shopTitle),
+        title: Text(context.l10n.shop),
         actions: [
           IconButton(
             icon: Stack(
@@ -103,10 +103,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                         onChanged: (val) =>
                             setState(() => _searchQuery = val.toLowerCase()),
                         style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          hintText: AppStrings.shopSearchHint,
+                        decoration: InputDecoration(
+                          hintText: context.l10n.shopSearchHint,
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.white24),
+                          hintStyle: const TextStyle(color: Colors.white24),
                         ),
                       ),
                     ),
@@ -130,7 +130,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return _CategoryChip(
-                        label: AppStrings.shopCategoryAll,
+                        label: context.l10n.shopCategoryAll,
                         isSelected: _selectedCategoryId == null,
                         onTap: () => setState(() => _selectedCategoryId = null),
                       );
@@ -165,8 +165,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                     .toList();
 
                 if (filtered.isEmpty) {
-                  return const SliverFillRemaining(
-                    child: Center(child: Text(AppStrings.noProductsFound)),
+                  return SliverFillRemaining(
+                    child: Center(child: Text(context.l10n.noProductsFound)),
                   );
                 }
 
@@ -195,7 +195,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
               ),
               error: (e, _) => SliverFillRemaining(
                 child: Center(
-                  child: Text('${AppStrings.errorLoading}$e'),
+                  child: Text(context.l10n.errorLoading(e.toString())),
                 ),
               ),
             ),

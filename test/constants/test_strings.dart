@@ -1,0 +1,34 @@
+class TestStrings {
+  static const String labelEmail = 'Email';
+  static const String labelPassword = 'Password';
+  static const String labelConfirmPassword = 'Confirm Password';
+  static const String labelFullName = 'Full Name';
+  static const String labelPhone = 'Phone Number';
+  static const String btnLogin = 'LOGIN';
+  static const String btnRegister = 'REGISTER';
+  static const String registerNow = 'Register now';
+  static const String login = 'Login';
+  static const String loginTitle = 'Welcome\nBack 👋';
+  static const String registerTitle = 'Create Account 🏓';
+  static const String valEmptyEmail = 'Please enter your email';
+  static const String valEmptyPassword = 'Please enter your password';
+  static const String valInvalidEmail = 'Invalid email';
+  static const String errorLoading = 'Error loading data: ';
+  static const String sectionFeaturedCourts = 'Featured Courts';
+  static const String seeAll = 'See all';
+  static const String sectionNewProducts = 'Premium Equipment';
+  static const String shopNow = 'SHOP NOW';
+  static const String bookingSummary = 'Booking Summary';
+  static const String bookingDetailSection = 'Booking Details';
+  static const String paymentMethodSection = 'Payment Method';
+  static const String msgBookingSuccess = 'Booking Successful!';
+  static const String equipmentRentalSection = 'Equipment Rental';
+  static const String voucherSection = 'Voucher';
+  static const String paymentInfoSection = 'Payment Information';
+  static const String sectionDescription = 'Description';
+  static const String sectionAmenities = 'Amenities';
+  static const String sectionRules = 'Rules';
+  static const String sectionLocation = 'Location';
+  static const String sectionReviews = 'Reviews';
+  static const String btnContinue = 'CONTINUE';
+}

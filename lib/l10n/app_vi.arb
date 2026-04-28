@@ -1,0 +1,237 @@
+{
+  "@@locale": "vi",
+  "appTitle": "Pickleball Hub",
+  "login": "Đăng nhập",
+  "register": "Đăng ký",
+  "email": "Email",
+  "password": "Mật khẩu",
+  "loginTitle": "Chào mừng\ntrở lại 👋",
+  "loginSubtitle": "Đăng nhập để đặt sân và mua sắm",
+  "forgotPassword": "Quên mật khẩu?",
+  "btnLogin": "ĐĂNG NHẬP",
+  "dontHaveAccount": "Chưa có tài khoản? ",
+  "registerNow": "Đăng ký ngay",
+  "msgLoginFailed": "Đăng nhập thất bại",
+  "registerTitle": "Tạo tài khoản 🏓",
+  "registerSubtitle": "Gia nhập cộng đồng Pickleball ngay hôm nay",
+  "labelFullName": "Họ và tên",
+  "labelPhone": "Số điện thoại",
+  "labelEmail": "Email",
+  "labelPassword": "Mật khẩu",
+  "labelConfirmPassword": "Xác nhận mật khẩu",
+  "btnRegister": "ĐĂNG KÝ",
+  "alreadyHaveAccount": "Đã có tài khoản? ",
+  "valEmptyName": "Vui lòng nhập tên",
+  "valEmptyEmail": "Vui lòng nhập email",
+  "valInvalidEmail": "Email không hợp lệ",
+  "valEmptyPassword": "Vui lòng nhập mật khẩu",
+  "valShortPassword": "Mật khẩu tối thiểu 6 ký tự",
+  "valPasswordMismatch": "Mật khẩu không khớp",
+  "valEmptyPhone": "Hãy nhập số điện thoại",
+  "msgCheckEmail": "Vui lòng kiểm tra email để xác nhận tài khoản!",
+  "msgRegisterFailed": "Đăng ký thất bại",
+
+  "myActivities": "Hoạt động của tôi",
+  "bookings": "Lịch đặt sân",
+  "noBookings": "Chưa có lịch đặt",
+  "bookingsCount": "Bạn có {count} lịch đặt",
+  "@bookingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "orders": "Đơn mua hàng",
+  "ordersSubtitle": "Theo dõi đơn hàng của bạn",
+  "favorites": "Yêu thích",
+  "favoritesSubtitle": "Sân và sản phẩm đã lưu",
+  "account": "Tài khoản",
+  "personalInfo": "Thông tin cá nhân",
+  "personalInfoSubtitle": "Cập nhật thông tin của bạn",
+  "notifications": "Thông báo",
+  "notificationsSubtitle": "Cài đặt thông báo",
+  "support": "Hỗ trợ",
+  "supportSubtitle": "Liên hệ với chúng tôi",
+  "btnLogout": "Đăng xuất",
+  "guest": "Khách",
+
+  "editProfile": "Chỉnh sửa thông tin",
+  "displayName": "Tên hiển thị",
+  "hintDisplayName": "Nhập tên của bạn",
+  "hintPhone": "Nhập số điện thoại",
+  "btnSaveChanges": "LƯU THAY ĐỔI",
+  "updateSuccess": "Cập nhật thông tin thành công",
+  "error": "Lỗi",
+
+  "home": "Trang chủ",
+  "shop": "Shop",
+  "profileTab": "Tôi",
+
+  "goodMorning": "Chào buổi sáng",
+  "goodAfternoon": "Chào buổi chiều",
+  "goodEvening": "Chào buổi tối",
+  "greetingWithName": "{greeting}, {name}!",
+  "@greetingWithName": {
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeLocationDefault": "TP. Hà Nội",
+
+  "errorGeneric": "Đã có lỗi xảy ra",
+  "errorLoading": "Lỗi tải dữ liệu: {error}",
+  "@errorLoading": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "valContinuousTime": "Vui lòng chọn khung giờ liên tục.",
+  "msgVoucherInvalid": "Mã giảm giá không hợp lệ.",
+  "msgOrderFailed": "Tạo đơn hàng thất bại",
+  "selectSubCourtFirst": "Vui lòng chọn sân con trước",
+  "noCourtFound": "Không tìm thấy sân nào.",
+  "noBookingsYet": "Bạn chưa có lịch đặt sân nào",
+  "noProductsFound": "Không có sản phẩm nào",
+  "cartEmpty": "Giỏ hàng trống",
+  "noOrdersYet": "Bạn chưa có đơn hàng nào",
+
+  "bookingHistory": "Lịch đặt sân",
+  "btnRetry": "Thử lại",
+  "checkInCode": "Mã vé check-in",
+  "bookingDetail": "Chi tiết đặt sân",
+  "labelStatus": "Trạng thái",
+  "courtInfo": "Thông tin sân",
+  "labelCourtName": "Tên sân",
+  "labelPlayDate": "Ngày chơi",
+  "labelPlayTime": "Giờ chơi",
+  "labelCourtAddress": "Địa chỉ",
+  "paymentInfo": "Thanh toán",
+  "labelTotalMoney": "Tổng tiền",
+  "btnCancelBooking": "Hủy đặt sân",
+  "cancelBookingTitle": "Hủy đặt sân",
+  "cancelBookingContent": "Bạn có chắc chắn muốn hủy đặt sân này không?",
+  "cancelPolicy24hBefore": "• Hủy trước 24h: Hoàn tiền 100% về ví PicklePay.",
+  "cancelPolicy24hWithin": "• Hủy trong vòng 24h: Phí hủy sân 50%.",
+  "btnNo": "KHÔNG",
+  "btnYes": "CÓ",
+  "msgCancelSuccess": "Hủy thành công",
+
+  "cartTitle": "Giỏ hàng",
+  "btnShopNow": "Mua ngay",
+  "labelTotal": "Tổng cộng",
+  "labelPayment": "Thanh toán:",
+  "btnCheckout": "THANH TOÁN",
+  "processingPayment": "Đang xử lý thanh toán...",
+  "paymentSuccess": "Thanh toán thành công!",
+  "orderConfirmed": "Đơn hàng của bạn đã được ghi nhận.",
+  "btnContinueShopping": "TIẾP TỤC MUA SẮM",
+  "purchaseHistory": "Lịch sử mua hàng",
+  "labelOrderDate": "Ngày đặt: {date}",
+  "@labelOrderDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "labelQuantityShort": "SL: {count}",
+  "@labelQuantityShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopSearchHint": "Tìm kiếm dụng cụ, phụ kiện...",
+  "shopCategoryAll": "Tất cả",
+
+  "courtList": "Danh sách sân",
+  "courtSearchHint": "Tìm theo tên hoặc địa chỉ...",
+  "perHour": "/giờ",
+  "orderNow": "Đặt ngay",
+
+  "selectTime": "Chọn giờ chơi",
+  "noSubCourts": "Không có sân con nào.",
+  "selectTimeHint": "Chọn khung giờ",
+  "statusAvailable": "Còn trống",
+  "statusBooked": "Đã đặt",
+  "statusSelected": "Đang chọn",
+  "noOpeningHours": "Chưa có thông tin giờ mở cửa cho sân này.",
+  "totalDuration": "Tổng thời gian",
+  "labelDay": "Ngày",
+  "btnConfirmBooking": "XÁC NHẬN ĐẶT SÂN",
+  "hoursShort": "{count} giờ",
+  "@hoursShort": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+
+  "bookingSummary": "Xác nhận đặt sân",
+  "bookingDetailSection": "Thông tin đặt sân",
+  "labelTimeSlot": "Khung giờ",
+  "paymentMethodSection": "Phương thức thanh toán",
+  "btnConfirmAndPay": "XÁC NHẬN & THANH TOÁN",
+  "msgBookingSuccess": "Đặt sân thành công!",
+  "msgBookingSuccessSubtitle": "Sân của bạn đã được giữ chỗ.",
+  "btnViewBooking": "XEM LỊCH ĐẶT",
+
+  "equipmentRentalSection": "Thuê dụng cụ",
+  "voucherSection": "Mã giảm giá",
+  "voucherHint": "Nhập mã giảm giá",
+  "btnApplyVoucher": "ÁP DỤNG",
+  "msgVoucherSuccess": "Áp dụng mã thành công!",
+  "paymentInfoSection": "Thông tin thanh toán",
+  "courtTotalLabel": "Tiền sân",
+  "equipmentTotalLabel": "Tiền thuê dụng cụ",
+  "labelVoucher": "Mã giảm giá ({code})",
+  "@labelVoucher": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "sectionDescription": "Mô tả",
+  "sectionAmenities": "Tiện ích",
+  "sectionRules": "Quy định",
+  "sectionLocation": "Vị trí",
+  "sectionReviews": "Đánh giá",
+  "startingFrom": "Chỉ từ",
+  "mapUpdating": "Đang cập nhật bản đồ...",
+  "btnContinue": "TIẾP TỤC",
+  "reviewsCount": "Đánh giá ({count})",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "actionNearby": "Lân cận",
+  "actionHotHours": "Giờ vàng",
+  "actionVouchers": "Ưu đãi",
+  "actionVip": "VIP Member",
+
+  "homeSearchHint": "Tìm kiếm sân pickleball...",
+  "featuredCourtsSection": "Sân nổi bật",
+  "featuredProductsSection": "Dụng cụ cao cấp",
+  "seeAll": "Xem tất cả",
+  "bannerAction": "KHÁM PHÁ NGAY",
+  "featureUnderDevelopment": "Tính năng đang phát triển",
+  "language": "Ngôn ngữ",
+  "languageEn": "Tiếng Anh",
+  "languageVi": "Tiếng Việt"
+}

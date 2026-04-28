@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/domain/entities/sub_court.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/court_providers.dart';
@@ -44,7 +45,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
     if (_isSlotInPast(slot)) return;
     if (_selectedSubCourtId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.selectSubCourtFirst)),
+        SnackBar(content: Text(context.l10n.selectSubCourtFirst)),
       );
       return;
     }
@@ -154,11 +155,12 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
     }
 
     return Scaffold(
+      key: WidgetKeys.slotPickerScaffold,
       appBar: AppBar(
         title: Text(
           courtDetailsAsync.value?.name ??
               widget.courtName ??
-              AppStrings.selectTime,
+              context.l10n.selectTime,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -197,6 +199,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                   final isSelected = DateUtils.isSameDay(_selectedDate, date);
 
                   return GestureDetector(
+                    key: WidgetKeys.dateItem(index),
                     onTap: () {
                       final normalized =
                           DateTime(date.year, date.month, date.day);
@@ -251,11 +254,11 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
           subCourtsAsync.when(
             data: (subCourts) {
               if (subCourts.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
                   child: Text(
-                    'Không có sân con nào.',
-                    style: TextStyle(color: Colors.redAccent),
+                    context.l10n.noSubCourts,
+                    style: const TextStyle(color: Colors.redAccent),
                   ),
                 );
               }
@@ -273,6 +276,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                       final isSelected = _selectedSubCourtId == subCourt.id;
 
                       return GestureDetector(
+                        key: WidgetKeys.subCourtItem(subCourt.id),
                         onTap: () {
                           setState(() {
                             _selectedSubCourtId = subCourt.id;
@@ -317,7 +321,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, _) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.p20),
-              child: Text('Lỗi tải sân con: $err'),
+              child: Text(context.l10n.errorLoading(err.toString())),
             ),
           ),
 
@@ -329,9 +333,9 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  AppStrings.selectTimeHint,
-                  style: TextStyle(
+                Text(
+                  context.l10n.selectTimeHint,
+                  style: const TextStyle(
                     fontSize: AppSizes.bodyLarge,
                     fontWeight: FontWeight.bold,
                   ),
@@ -358,17 +362,17 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
               children: [
                 _LegendItem(
                   color: theme.cardColor,
-                  label: AppStrings.statusAvailable,
+                  label: context.l10n.statusAvailable,
                 ),
                 const SizedBox(width: AppSizes.p16),
-                const _LegendItem(
+                _LegendItem(
                   color: Colors.white24,
-                  label: AppStrings.statusBooked,
+                  label: context.l10n.statusBooked,
                 ),
                 const SizedBox(width: AppSizes.p16),
                 _LegendItem(
                   color: theme.primaryColor,
-                  label: AppStrings.statusSelected,
+                  label: context.l10n.statusSelected,
                 ),
               ],
             ),
@@ -378,11 +382,13 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
           Expanded(
             child: availableSlotsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, _) => Center(child: Text('Lỗi tải giờ chơi: $err')),
+              error: (err, _) => Center(
+                child: Text(context.l10n.errorLoading(err.toString())),
+              ),
               data: (slots) {
                 if (slots.isEmpty) {
-                  return const Center(
-                    child: Text('Chưa có thông tin giờ mở cửa cho sân này.'),
+                  return Center(
+                    child: Text(context.l10n.noOpeningHours),
                   );
                 }
 
@@ -433,6 +439,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                             isAvailabilityLoading || isBooked || isPast;
 
                         return GestureDetector(
+                          key: WidgetKeys.slotItem(slot),
                           onTap: isDisabled
                               ? null
                               : () => _onSlotTap(
@@ -485,7 +492,8 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  error: (err, _) => Center(child: Text('Lỗi: $err')),
+                  error: (err, _) =>
+                      Center(child: Text(context.l10n.errorGeneric)),
                 );
               },
             ),
@@ -560,7 +568,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${AppStrings.totalDuration} (${totalHours.toStringAsFixed(1)} giờ)',
+                                '${context.l10n.totalDuration} (${context.l10n.hoursShort(totalHours.toStringAsFixed(1))})',
                                 style: const TextStyle(color: Colors.white54),
                               ),
                               if (selectedSubCourt != null)
@@ -583,7 +591,7 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                                 ),
                               ),
                               Text(
-                                '${AppStrings.labelDay} ${_selectedDate.day}/${_selectedDate.month}',
+                                '${context.l10n.labelDay} ${_selectedDate.day}/${_selectedDate.month}',
                                 style: const TextStyle(
                                   fontSize: AppSizes.labelSmall,
                                   color: Colors.white38,
@@ -595,12 +603,13 @@ class _SlotPickerScreenState extends ConsumerState<SlotPickerScreen> {
                       ),
                       const SizedBox(height: AppSizes.p24),
                       NeonButton(
-                        label: AppStrings.btnConfirmBooking,
+                        key: WidgetKeys.continueToSummaryButton,
+                        label: context.l10n.btnConfirmBooking,
                         onPressed: () {
                           if (!_isSelectionContinuous(currentSlots)) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(AppStrings.valContinuousTime),
+                              SnackBar(
+                                content: Text(context.l10n.valContinuousTime),
                                 backgroundColor: Colors.orange,
                               ),
                             );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
 import 'package:pickle_pick/core/enum/enum.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 
@@ -38,8 +39,9 @@ class QuickActionsSection extends StatelessWidget {
                           break;
                         case QuickActionType.vip:
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Tính năng đang phát triển'),
+                            SnackBar(
+                              content:
+                                  Text(context.l10n.featureUnderDevelopment),
                             ),
                           );
                           break;
@@ -89,7 +91,7 @@ class _QuickAction extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.p8),
         Text(
-          action.label,
+          action.getLabel(context),
           style: TextStyle(
             fontSize: AppSizes.labelSmall,
             fontWeight: FontWeight.w600,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'l10n/app_localizations.dart';
 
 class PickleballApp extends ConsumerWidget {
   const PickleballApp({super.key});
@@ -10,6 +12,7 @@ class PickleballApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appRouter = ref.watch(appRouterProvider);
+    final locale = ref.watch(localeNotifierProvider);
 
     return MaterialApp.router(
       title: 'Pickleball Hub',
@@ -17,6 +20,9 @@ class PickleballApp extends ConsumerWidget {
       theme: AppTheme.darkTheme, // Deep navy & Neon theme
       routerDelegate: appRouter.delegate(),
       routeInformationParser: appRouter.defaultRouteParser(),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

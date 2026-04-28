@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -53,7 +53,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       },
       error: (e, _) {
-        final msg = e is AuthException ? e.message : AppStrings.msgLoginFailed;
+        final msg =
+            e is AuthException ? e.message : context.l10n.msgLoginFailed;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: Colors.red),
         );
@@ -93,7 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const Logo(),
                 const SizedBox(height: AppSizes.p40),
                 Text(
-                  AppStrings.loginTitle,
+                  context.l10n.loginTitle,
                   style: theme.textTheme.displayLarge?.copyWith(
                     fontSize: AppSizes.displayLarge,
                     height: 1.2,
@@ -101,7 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: AppSizes.p8),
                 Text(
-                  AppStrings.loginSubtitle,
+                  context.l10n.loginSubtitle,
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: AppSizes.p40),
@@ -119,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: TextButton(
                     onPressed: () {},
                     child: Text(
-                      AppStrings.forgotPassword,
+                      context.l10n.forgotPassword,
                       style: TextStyle(
                         color: theme.colorScheme.primary,
                       ),
@@ -131,7 +132,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   height: AppSizes.buttonHeight,
                   child: NeonButton(
-                    label: AppStrings.btnLogin,
+                    label: context.l10n.btnLogin,
                     onPressed: _submit,
                     isLoading: isLoading,
                   ),
@@ -141,13 +142,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.dontHaveAccount,
+                      context.l10n.dontHaveAccount,
                       style: theme.textTheme.bodyMedium,
                     ),
                     GestureDetector(
                       onTap: () => context.router.push(const RegisterRoute()),
                       child: Text(
-                        AppStrings.registerNow,
+                        context.l10n.registerNow,
                         style: TextStyle(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -174,13 +175,13 @@ class _EmailField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.emailAddress,
-      decoration: const InputDecoration(
-        labelText: AppStrings.labelEmail,
-        prefixIcon: Icon(Icons.email_outlined),
+      decoration: InputDecoration(
+        labelText: context.l10n.labelEmail,
+        prefixIcon: const Icon(Icons.email_outlined),
       ),
       validator: (v) {
-        if (v == null || v.isEmpty) return AppStrings.valEmptyEmail;
-        if (!v.contains('@')) return AppStrings.valInvalidEmail;
+        if (v == null || v.isEmpty) return context.l10n.valEmptyEmail;
+        if (!v.contains('@')) return context.l10n.valInvalidEmail;
         return null;
       },
     );
@@ -203,7 +204,7 @@ class _PasswordField extends StatelessWidget {
       controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
-        labelText: AppStrings.labelPassword,
+        labelText: context.l10n.labelPassword,
         prefixIcon: const Icon(Icons.lock_outline),
         suffixIcon: IconButton(
           icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
@@ -211,8 +212,8 @@ class _PasswordField extends StatelessWidget {
         ),
       ),
       validator: (v) {
-        if (v == null || v.isEmpty) return AppStrings.valEmptyPassword;
-        if (v.length < 6) return AppStrings.valShortPassword;
+        if (v == null || v.isEmpty) return context.l10n.valEmptyPassword;
+        if (v.length < 6) return context.l10n.valShortPassword;
         return null;
       },
     );

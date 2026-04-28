@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
+import 'package:pickle_pick/core/keys/app_keys.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/booking/presentation/providers/booking_summary_riverpod.dart';
 import 'package:pickle_pick/features/booking/presentation/screens/widgets/equipment_section.dart';
@@ -47,8 +48,9 @@ class BookingSummaryScreen extends ConsumerWidget {
     final dateStr = DateFormat('dd/MM/yyyy').format(selectedDate);
 
     return Scaffold(
+      key: WidgetKeys.bookingSummaryScaffold,
       appBar: AppBar(
-        title: const Text(AppStrings.bookingSummaryTitle),
+        title: Text(context.l10n.bookingSummary),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.router.maybePop(),
@@ -65,9 +67,9 @@ class BookingSummaryScreen extends ConsumerWidget {
               address: courtAddress,
             ),
             const SizedBox(height: AppSizes.p32),
-            const Text(
-              AppStrings.bookingDetailSection,
-              style: TextStyle(
+            Text(
+              context.l10n.bookingDetailSection,
+              style: const TextStyle(
                 fontSize: AppSizes.titleLarge,
                 fontWeight: FontWeight.bold,
               ),
@@ -75,13 +77,13 @@ class BookingSummaryScreen extends ConsumerWidget {
             const SizedBox(height: AppSizes.p16),
             BookingDetailRow(
               icon: Icons.calendar_today,
-              label: AppStrings.labelDay,
+              label: context.l10n.labelDay,
               value: dateStr,
             ),
             const SizedBox(height: AppSizes.p12),
             BookingDetailRow(
               icon: Icons.access_time,
-              label: AppStrings.labelTimeSlot,
+              label: context.l10n.labelTimeSlot,
               value: selectedSlot,
             ),
             const SizedBox(height: AppSizes.p32),
@@ -91,9 +93,9 @@ class BookingSummaryScreen extends ConsumerWidget {
             const SizedBox(height: AppSizes.p32),
             PaymentSummarySection(basePrice: price),
             const SizedBox(height: AppSizes.p48),
-            const Text(
-              AppStrings.paymentMethodSection,
-              style: TextStyle(
+            Text(
+              context.l10n.paymentMethodSection,
+              style: const TextStyle(
                 fontSize: AppSizes.titleLarge,
                 fontWeight: FontWeight.bold,
               ),
@@ -130,7 +132,8 @@ class BookingSummaryScreen extends ConsumerWidget {
                 );
 
                 return NeonButton(
-                  label: AppStrings.btnConfirmAndPay,
+                  key: WidgetKeys.confirmBookingButton,
+                  label: context.l10n.btnConfirmAndPay,
                   isLoading: isProcessing,
                   color: theme.primaryColor,
                   onPressed: () => _processPayment(context, ref),
@@ -165,7 +168,7 @@ class BookingSummaryScreen extends ConsumerWidget {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppStrings.errorLoading}$e')),
+        SnackBar(content: Text(context.l10n.errorLoading(e.toString()))),
       );
     }
   }
@@ -187,24 +190,24 @@ class BookingSummaryScreen extends ConsumerWidget {
               color: Colors.greenAccent,
             ),
             const SizedBox(height: AppSizes.p24),
-            const Text(
-              AppStrings.msgBookingSuccess,
-              style: TextStyle(
+            Text(
+              context.l10n.msgBookingSuccess,
+              style: const TextStyle(
                 fontSize: AppSizes.h5,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: AppSizes.p12),
-            const Text(
-              AppStrings.msgBookingSuccessSubtitle,
+            Text(
+              context.l10n.msgBookingSuccessSubtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white54),
+              style: const TextStyle(color: Colors.white54),
             ),
             const SizedBox(height: AppSizes.p32),
             SizedBox(
               width: double.infinity,
               child: NeonButton(
-                label: AppStrings.btnViewBooking,
+                label: context.l10n.btnViewBooking,
                 color: theme.primaryColor,
                 onPressed: () {
                   Navigator.pop(context);

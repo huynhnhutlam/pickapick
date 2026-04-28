@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 
 @RoutePage()
@@ -23,17 +24,23 @@ class MainWrapperScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).cardColor,
           selectedItemColor: Theme.of(context).primaryColor,
           unselectedItemColor: Colors.white.withValues(alpha: 0.6),
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Đặt sân',
+              icon: const Icon(Icons.home),
+              label: context.l10n.home,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
-              label: 'Shop',
+              icon: const Icon(Icons.calendar_today),
+              label: context.l10n.bookings,
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tôi'),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.shopping_bag),
+              label: context.l10n.shop,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.person),
+              label: context.l10n.profileTab,
+            ),
           ],
         );
       },

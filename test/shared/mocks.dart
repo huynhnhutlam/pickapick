@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pickle_pick/core/services/firebase_services/analytics_services.dart';
 import 'package:pickle_pick/features/booking/domain/repositories/court_repository.dart';
 import 'package:pickle_pick/features/home/domain/repositories/home_repository.dart';
 import 'package:pickle_pick/features/home/domain/usecases/get_banners_use_case.dart';
@@ -14,3 +15,5 @@ class MockCourtRepository extends Mock implements CourtRepository {}
 class MockShopRepository extends Mock implements SupabaseShopRepository {}
 
 class MockStackRouter extends Mock implements StackRouter {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}

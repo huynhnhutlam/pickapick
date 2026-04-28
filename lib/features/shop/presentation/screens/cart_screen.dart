@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/shared/utils/formatters.dart';
 import 'package:pickle_pick/shared/widgets/common_widgets.dart';
 
@@ -20,7 +21,7 @@ class CartScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Giỏ hàng'),
+        title: Text(context.l10n.cartTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline),
@@ -40,9 +41,9 @@ class CartScreen extends ConsumerWidget {
                       color: Colors.white12,
                     ),
                     const SizedBox(height: AppSizes.p20),
-                    const Text(
-                      'Giỏ hàng trống',
-                      style: TextStyle(
+                    Text(
+                      context.l10n.cartEmpty,
+                      style: const TextStyle(
                         fontSize: AppSizes.titleLarge,
                         color: Colors.white38,
                       ),
@@ -51,7 +52,7 @@ class CartScreen extends ConsumerWidget {
                     SizedBox(
                       width: 200,
                       child: NeonButton(
-                        label: 'MUA SẮM NGAY',
+                        label: context.l10n.btnShopNow,
                         color: theme.primaryColor,
                         onPressed: () => context.router.popUntilRoot(),
                         radius: AppSizes.r30,
@@ -178,9 +179,9 @@ class CartScreen extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Tổng cộng',
-                              style: TextStyle(
+                            Text(
+                              context.l10n.labelTotal,
+                              style: const TextStyle(
                                 fontSize: AppSizes.bodyLarge,
                                 color: Colors.white54,
                               ),
@@ -198,9 +199,9 @@ class CartScreen extends ConsumerWidget {
                         const SizedBox(height: AppSizes.p24),
                         Row(
                           children: [
-                            const Text(
-                              'Thanh toán:',
-                              style: TextStyle(color: Colors.white38),
+                            Text(
+                              context.l10n.labelPayment,
+                              style: const TextStyle(color: Colors.white38),
                             ),
                             const Spacer(),
                             Container(
@@ -238,7 +239,7 @@ class CartScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: AppSizes.p20),
                         NeonButton(
-                          label: 'THANH TOÁN',
+                          label: context.l10n.btnCheckout,
                           color: theme.primaryColor,
                           onPressed: () async {
                             if (cartNotifier.totalAmount == 0) return;
@@ -265,9 +266,9 @@ class CartScreen extends ConsumerWidget {
                                           color: theme.primaryColor,
                                         ),
                                         const SizedBox(height: AppSizes.p16),
-                                        const Text(
-                                          'Đang xử lý thanh toán...',
-                                          style: TextStyle(
+                                        Text(
+                                          context.l10n.processingPayment,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -296,8 +297,9 @@ class CartScreen extends ConsumerWidget {
                               } catch (e) {
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Tạo đơn hàng thất bại'),
+                                    SnackBar(
+                                      content:
+                                          Text(context.l10n.msgOrderFailed),
                                     ),
                                   );
                                 }
@@ -323,18 +325,18 @@ class CartScreen extends ConsumerWidget {
                                           color: Colors.greenAccent,
                                         ),
                                         const SizedBox(height: AppSizes.p24),
-                                        const Text(
-                                          'Thanh toán thành công!',
-                                          style: TextStyle(
+                                        Text(
+                                          context.l10n.paymentSuccess,
+                                          style: const TextStyle(
                                             fontSize: AppSizes.h5,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         const SizedBox(height: AppSizes.p12),
-                                        const Text(
-                                          'Đơn hàng của bạn đã được ghi nhận.',
+                                        Text(
+                                          context.l10n.orderConfirmed,
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.white54,
                                           ),
                                         ),
@@ -342,7 +344,8 @@ class CartScreen extends ConsumerWidget {
                                         SizedBox(
                                           width: double.infinity,
                                           child: NeonButton(
-                                            label: 'TIẾP TỤC MUA SẮM',
+                                            label: context
+                                                .l10n.btnContinueShopping,
                                             color: theme.primaryColor,
                                             onPressed: () {
                                               Navigator.of(context).pop();
@@ -366,7 +369,7 @@ class CartScreen extends ConsumerWidget {
                 ],
               ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Lỗi: $error')),
+        error: (error, stack) => Center(child: Text(context.l10n.errorGeneric)),
       ),
     );
   }

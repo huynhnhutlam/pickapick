@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pickle_pick/core/constants/app_sizes.dart';
-import 'package:pickle_pick/core/constants/app_strings.dart';
+import 'package:pickle_pick/core/extensions/context_extension.dart';
 import 'package:pickle_pick/core/router/app_router.dart';
 import 'package:pickle_pick/features/auth/presentation/providers/auth_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -11,14 +11,14 @@ import 'package:skeletonizer/skeletonizer.dart';
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
 
-  String _getGreeting() {
+  String _getGreeting(BuildContext context) {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return 'Chào buổi sáng';
+      return context.l10n.goodMorning;
     } else if (hour < 18) {
-      return 'Chào buổi chiều';
+      return context.l10n.goodAfternoon;
     } else {
-      return 'Chào buổi tối';
+      return context.l10n.goodEvening;
     }
   }
 
@@ -26,7 +26,7 @@ class HomeHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final profileAsync = ref.watch(userProfileProvider);
-    final greeting = _getGreeting();
+    final greeting = _getGreeting(context);
 
     return Padding(
       padding: const EdgeInsets.all(AppSizes.p20),
@@ -39,10 +39,9 @@ class HomeHeader extends ConsumerWidget {
               children: [
                 profileAsync.when(
                   data: (profile) {
-                    final name =
-                        profile?['full_name'] ?? AppStrings.defaultUserName;
+                    final name = profile?['full_name'] ?? context.l10n.guest;
                     return Text(
-                      '$greeting, $name!',
+                      context.l10n.greetingWithName(greeting, name),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                         fontSize: AppSizes.h2,
@@ -54,7 +53,7 @@ class HomeHeader extends ConsumerWidget {
                   loading: () => Skeletonizer(
                     enabled: true,
                     child: Text(
-                      '$greeting, User Name!',
+                      context.l10n.greetingWithName(greeting, 'User Name'),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                         fontSize: AppSizes.h2,
@@ -83,7 +82,7 @@ class HomeHeader extends ConsumerWidget {
                     ),
                     const SizedBox(width: AppSizes.p4),
                     Text(
-                      AppStrings.homeLocationDefault,
+                      context.l10n.homeLocationDefault,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.7),
                         fontSize: AppSizes.bodySmall,
