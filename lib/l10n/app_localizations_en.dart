@@ -301,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cartTitle => 'Cart';
 
   @override
-  String get btnShopNow => 'SHOP NOW';
+  String get btnShopNow => 'Shop now';
 
   @override
   String get labelTotal => 'Total';

@@ -665,7 +665,7 @@ abstract class AppLocalizations {
   /// No description provided for @btnShopNow.
   ///
   /// In en, this message translates to:
-  /// **'SHOP NOW'**
+  /// **'Shop now'**
   String get btnShopNow;
 
   /// No description provided for @labelTotal.

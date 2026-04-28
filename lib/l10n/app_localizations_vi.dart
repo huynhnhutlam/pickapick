@@ -299,7 +299,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get cartTitle => 'Giỏ hàng';
 
   @override
-  String get btnShopNow => 'MUA SẮM NGAY';
+  String get btnShopNow => 'Mua ngay';
 
   @override
   String get labelTotal => 'Tổng cộng';
